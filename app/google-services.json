@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "819396157662",
+    "firebase_url": "https://guardiancall-bd8c3-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "guardiancall-bd8c3",
+    "storage_bucket": "guardiancall-bd8c3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:819396157662:android:cea25568943b1d8d6aa24f",
+        "android_client_info": {
+          "package_name": "com.example.guardian_call"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5bfQJfQkHqeG9MSLFNUurgSYUHnrWn-w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:819396157662:android:3d1d3850fd23c3ba6aa24f",
+        "android_client_info": {
+          "package_name": "com.example.guardiancall"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5bfQJfQkHqeG9MSLFNUurgSYUHnrWn-w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
