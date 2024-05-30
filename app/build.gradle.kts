@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.guardian_call"
+    namespace = "com.techWizards.guardianCall"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.guardian_call"
+        applicationId = "com.techWizards.guardianCall"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

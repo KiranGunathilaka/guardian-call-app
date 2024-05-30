@@ -1,4 +1,4 @@
-package com.example.guardian_call;
+package com.techWizards.guardianCall;
 
 import static android.app.PendingIntent.FLAG_IMMUTABLE;
 
@@ -12,7 +12,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.AlarmClock;
 import android.view.View;
 import android.widget.Button;
@@ -25,7 +24,6 @@ import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 public class AlarmActivity extends AppCompatActivity {
     EditText timeHour;
