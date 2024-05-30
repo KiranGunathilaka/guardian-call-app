@@ -1,6 +1,6 @@
-package com.example.guardian_call;
+package com.techWizards.guardianCall;
 
-import static com.example.guardian_call.LoginActivity.ID;
+import static com.techWizards.guardianCall.LoginActivity.ID;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -16,7 +16,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
