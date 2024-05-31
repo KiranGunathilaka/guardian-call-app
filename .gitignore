@@ -14,5 +14,5 @@ app/build
 .cxx
 local.properties
 caches/
-.tmp/
 wrapper/
+.tmp/
