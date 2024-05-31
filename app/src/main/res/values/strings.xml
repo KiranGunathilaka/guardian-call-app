@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Guardian_Call</string>
+    <string name="button_login">Log In</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_pw">Password</string>
+    <string name="caretaker_and_patient">Caretaker and Patient</string>
+    <string name="guardian_call_logo">Guardian call logo</string>
+    <string name="sign_in">Sign In</string>
+    <string name="first_time_connecting_to_your_device">first time connecting to your device?</string>
+    <string name="register">Register</string>
 </resources>
