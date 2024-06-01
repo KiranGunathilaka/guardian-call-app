@@ -1,6 +1,7 @@
 *.iml
 .gradle
 /wrapper
+/daemon
 /local.properties
 /.idea/caches
 /.idea/libraries
@@ -16,4 +17,3 @@
 local.properties
 caches/
 .tmp/
-/daemon/
