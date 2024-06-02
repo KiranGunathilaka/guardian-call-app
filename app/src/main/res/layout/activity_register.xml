@@ -236,7 +236,7 @@
             android:background="@drawable/rounded_button"
             android:maxWidth="300dp"
             android:maxHeight="100dp"
-            android:text="@string/button_login"
+            android:text="@string/register"
             android:textColor="#FFFFFF"
 
             app:autoSizeMaxTextSize="24sp"

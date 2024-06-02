@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Guardian_Call</string>
     <string name="button_login">Log In</string>
-    <string name="hint_email">Email or Username</string>
+    <string name="hint_email">Email</string>
     <string name="hint_pw">Password</string>
     <string name="caretaker_and_patient">Caretaker and Patient</string>
     <string name="guardian_call_logo">Guardian call logo</string>
@@ -10,7 +10,7 @@
     <string name="register">Register</string>
     <string name="already_have_an_account">Already have an account?</string>
     <string name="enter_password">Enter Password</string>
-    <string name="enter_email">Enter Email or Username</string>
+    <string name="enter_email">Enter Email</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="enter_device_id">Enter Device ID</string>
     <string name="enter_secret_key">Enter Secret Key</string>

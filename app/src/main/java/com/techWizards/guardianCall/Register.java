@@ -5,16 +5,22 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -87,6 +93,16 @@ public class Register extends AppCompatActivity {
             }
         });
 
+        devId.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                String temp = devId.getText().toString().trim();
+                if (!hasFocus && !temp.isEmpty()) {
+                    checkDeviceIdExists(temp);
+                }
+            }
+        });
+
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,7 +111,7 @@ public class Register extends AppCompatActivity {
                 String password =pwd.getText().toString().trim();
                 String confPassword = confirmPwd.getText().toString().trim();
                 String deviceId = devId.getText().toString().trim();
-                String secretKey = devId.getText().toString().trim();
+                String secretKey = secKey.getText().toString().trim();
 
                 if ( user.isEmpty()){
                     email.setError("Username can't be empty");
@@ -103,17 +119,37 @@ public class Register extends AppCompatActivity {
                 if( password.isEmpty()){
                     pwd.setError("Password can't be empty");
                 }
-                if( confPassword.isEmpty() || confPassword.equals(password)){
+                if( confPassword.isEmpty() || !confPassword.equals(password)){
                     confirmPwd.setError("Passwords do not match");
                 }
-                if( deviceId.isEmpty() || isInteger(deviceId)){
-                    devId.setError("Device ID should be a Number");
+                if( deviceId.isEmpty()){
+                    devId.setError("Device ID can't be empty");
                 }
                 if( secretKey.isEmpty()){
                     secKey.setError("Secret Key can't be empty");
                 }
-                if ( !user.isEmpty() && !password.isEmpty()){
+                if ( !user.isEmpty() && !password.isEmpty() && !confPassword.isEmpty() && !deviceId.isEmpty() && !secretKey.isEmpty()){
+                    if (checkKeyMatchWithDevID(secretKey, deviceId)){
+                        auth.createUserWithEmailAndPassword(user, password).addOnCompleteListener(new OnCompleteListener<AuthResult>(){
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task){
+                                if (task.isSuccessful()){
+                                    FirebaseUser firebaseUser = task.getResult().getUser();
+                                    String userId = firebaseUser.getUid();
 
+                                    usersDatabase.child(userId).child("email").setValue(user);
+                                    usersDatabase.child(userId).child("deviceId").setValue(deviceId);
+
+                                    Toast.makeText(Register.this, "Successfully Registered", Toast.LENGTH_SHORT).show();
+                                    startActivity(new Intent(Register.this, SignIn.class));
+                                    finish();
+                                }else{
+                                    String errorMessage = task.getException() != null ? task.getException().getMessage() : "Unknown error";
+                                    Toast.makeText(Register.this, "Registering Failed, " + errorMessage, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    }
                 }
 
             }
@@ -129,25 +165,16 @@ public class Register extends AppCompatActivity {
 
     }
 
-    private boolean isInteger(String input) {
-        try {
-            Integer.parseInt(input);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
-    private void checkUsernameExists(String username) {
-        Query query = usersDatabase.orderByChild("username").equalTo(username);
+    private boolean checkUsernameExists(String eMail) {
+        Query query = usersDatabase.orderByChild("email").equalTo(eMail);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    Snackbar.make(email, "Username already exists", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.RED).show();
+                    Snackbar.make(email, "Email already exists", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.RED).show();
                     usernameExists = true;
                 } else {
-                    Snackbar.make(email, "Username is available", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.GREEN).show();
+                    Snackbar.make(email, "Email is available", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.GREEN).show();
                     usernameExists = false;
                 }
             }
@@ -158,19 +185,19 @@ public class Register extends AppCompatActivity {
                 Toast.makeText(Register.this, "Database error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+        return usernameExists;
     }
 
-    private void checkDeviceIdExists(String username) {
-        Query query = devicesDatabase.child("").equalTo(username);
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+    private boolean checkDeviceIdExists(String checkId) {
+        devicesDatabase.child(checkId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    Snackbar.make(email, "Username already exists", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.RED).show();
-                    usernameExists = true;
+                    Snackbar.make(email, "Valid Device ID", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.GREEN).show();
+                    deviceIdExists = true;
                 } else {
-                    Snackbar.make(email, "Username is available", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.GREEN).show();
-                    usernameExists = false;
+                    Snackbar.make(email, "Device ID does not exist", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.RED).show();
+                    deviceIdExists = false;
                 }
             }
 
@@ -180,5 +207,31 @@ public class Register extends AppCompatActivity {
                 Toast.makeText(Register.this, "Database error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+        return deviceIdExists;
+    }
+
+    private boolean checkKeyMatchWithDevID(String key, String checkID){
+        devicesDatabase.child(checkID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    String databaseKey = snapshot.child("Secret Key").getValue(String.class);
+                    if (databaseKey.equals(key)) {
+                        isSecretKeyMatched = true;
+                    }else{
+                        isSecretKeyMatched = false;
+                        Toast.makeText(Register.this, "Incorrect Device ID or Secret Key", Toast.LENGTH_SHORT).show();
+                    }
+                }else{
+                    devId.setError("Device ID does not exist");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(Register.this, "Database error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        return isSecretKeyMatched;
     }
 }
