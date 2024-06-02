@@ -75,7 +75,7 @@
 
 
     <Button
-        android:id="@+id/roundedButton"
+        android:id="@+id/logInButton"
         android:layout_width="0dp"
         android:layout_height="55dp"
         android:background="@drawable/rounded_button"
@@ -98,7 +98,7 @@
         />
 
     <EditText
-        android:id="@+id/emailEditText"
+        android:id="@+id/signInEmail"
         android:layout_width="0dp"
         android:layout_height="55dp"
         android:background="@drawable/edit_text_background"
@@ -130,21 +130,21 @@
         app:layout_constraintWidth_max="450dp"/>
 
     <EditText
-        android:id="@+id/pwEditText"
+        android:id="@+id/signInPwd"
         android:layout_width="0dp"
         android:layout_height="55dp"
         android:background="@drawable/edit_text_background"
         android:drawableEnd="@drawable/ic_padlock"
         android:drawablePadding="8dp"
         android:hint="@string/hint_pw"
-        android:autofillHints="emailAddress"
+        android:autofillHints="Password"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
 
         android:textColor="#FFFFFF"
         android:textColorHint="@color/whiteTrans"
         android:textSize="20sp"
-        android:inputType="textEmailAddress"
+        android:inputType="textPassword"
 
         app:autoSizeMaxTextSize="24sp"
         app:autoSizeMinTextSize="12sp"
@@ -200,7 +200,7 @@
         />
 
     <TextView
-        android:id="@+id/textRegister"
+        android:id="@+id/signInRegRedirect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/register"

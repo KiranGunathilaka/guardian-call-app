@@ -8,26 +8,7 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:819396157662:android:cea25568943b1d8d6aa24f",
-        "android_client_info": {
-          "package_name": "com.techWizards.guardianCall"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyD5bfQJfQkHqeG9MSLFNUurgSYUHnrWn-w"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:819396157662:android:3d1d3850fd23c3ba6aa24f",
+        "mobilesdk_app_id": "1:819396157662:android:4480b64c8a7e00656aa24f",
         "android_client_info": {
           "package_name": "com.techWizards.guardianCall"
         }

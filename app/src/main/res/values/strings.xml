@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Guardian_Call</string>
     <string name="button_login">Log In</string>
-    <string name="hint_email">Email</string>
+    <string name="hint_email">Email or Username</string>
     <string name="hint_pw">Password</string>
     <string name="caretaker_and_patient">Caretaker and Patient</string>
     <string name="guardian_call_logo">Guardian call logo</string>

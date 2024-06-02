@@ -90,7 +90,7 @@
                 app:layout_constraintWidth_max="450dp" />
 
             <EditText
-                android:id="@+id/emailEditText"
+                android:id="@+id/registerEmail"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:background="@drawable/edit_text_background"
@@ -116,7 +116,7 @@
                 app:layout_constraintWidth_max="450dp"/>
 
             <EditText
-                android:id="@+id/pwEditTextInRegister"
+                android:id="@+id/registerPwd"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:background="@drawable/edit_text_background"
@@ -130,7 +130,7 @@
                 android:textColor="#FFFFFF"
                 android:textColorHint="@color/whiteTrans"
                 android:textSize="20sp"
-                android:inputType="textEmailAddress"
+                android:inputType="textPassword"
 
                 app:autoSizeMaxTextSize="24sp"
                 app:autoSizeMinTextSize="12sp"
@@ -142,7 +142,7 @@
                 app:layout_constraintWidth_max="450dp"/>
 
             <EditText
-                android:id="@+id/pwConfirmTextInRegister"
+                android:id="@+id/registerConfPwd"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:background="@drawable/edit_text_background"
@@ -156,7 +156,7 @@
                 android:textColor="#FFFFFF"
                 android:textColorHint="@color/whiteTrans"
                 android:textSize="20sp"
-                android:inputType="textEmailAddress"
+                android:inputType="textPassword"
 
                 app:autoSizeMaxTextSize="24sp"
                 app:autoSizeMinTextSize="12sp"
@@ -168,7 +168,7 @@
                 app:layout_constraintWidth_max="450dp"/>
 
             <EditText
-                android:id="@+id/EditTextDeviceID"
+                android:id="@+id/registerDeviceID"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:background="@drawable/edit_text_background"
@@ -182,7 +182,7 @@
                 android:textColor="#FFFFFF"
                 android:textColorHint="@color/whiteTrans"
                 android:textSize="20sp"
-                android:inputType="textEmailAddress"
+                android:inputType="number"
 
                 app:autoSizeMaxTextSize="24sp"
                 app:autoSizeMinTextSize="12sp"
@@ -194,7 +194,7 @@
                 app:layout_constraintWidth_max="450dp"/>
 
             <EditText
-                android:id="@+id/EditTextSecretKey"
+                android:id="@+id/registerSecretkey"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:background="@drawable/edit_text_background"
@@ -208,7 +208,7 @@
                 android:textColor="#FFFFFF"
                 android:textColorHint="@color/whiteTrans"
                 android:textSize="20sp"
-                android:inputType="textEmailAddress"
+                android:inputType="text"
 
                 app:autoSizeMaxTextSize="24sp"
                 app:autoSizeMinTextSize="12sp"
@@ -230,7 +230,7 @@
             app:layout_constraintWidth_max="400dp">
 
         <Button
-            android:id="@+id/roundedButton"
+            android:id="@+id/registerButton"
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:background="@drawable/rounded_button"
@@ -265,7 +265,7 @@
             />
 
         <TextView
-            android:id="@+id/textSignInInRegister"
+            android:id="@+id/signInRedirectText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/sign_in"
