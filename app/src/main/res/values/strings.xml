@@ -10,7 +10,7 @@
     <string name="register">Register</string>
     <string name="already_have_an_account">Already have an account?</string>
     <string name="enter_password">Enter Password</string>
-    <string name="enter_email">Enter Email</string>
+    <string name="enter_email">Enter Email or Username</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="enter_device_id">Enter Device ID</string>
     <string name="enter_secret_key">Enter Secret Key</string>
