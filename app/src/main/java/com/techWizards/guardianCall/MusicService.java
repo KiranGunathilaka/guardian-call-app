@@ -63,9 +63,9 @@ public class MusicService extends Service {
                         mp.setLooping(true);
                         mp.start();
 
-                        Intent activityIntent = new Intent(MusicService.this, testActivity.class); // Replace with the activity you want to open
-                        activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        startActivity(activityIntent);
+                        // Write a code below with the activity you want to open
+
+
 
                     }
 
