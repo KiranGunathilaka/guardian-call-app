@@ -1,155 +1,290 @@
 package com.techWizards.guardianCall;
 
-import static android.app.PendingIntent.FLAG_IMMUTABLE;
 
-import androidx.appcompat.app.AppCompatActivity;
+import static com.techWizards.guardianCall.MainActivity.deviceId;
 
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.provider.AlarmClock;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CompoundButton;
+import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.Switch;
-import android.widget.TimePicker;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.SimpleDateFormat;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 public class AlarmActivity extends AppCompatActivity {
-    EditText timeHour;
-    EditText timeMinute;
-    Button setTime;
-    Button setAlarm;
-    TimePickerDialog timePickerDialog;
-    Calendar calendar;
-    int currentHour;
-    int currentMinute;
-    SharedPreferences sp;
+
+    public static String ID = deviceId;
+    private ArrayList<Alarm> alarmList;
+    private AlarmAdapter adapter;
+    private int hourOfDay, minute;
+
+    private String message;
+
+    private boolean[] daysOfWeek = new boolean[7]; // For Monday to Sunday
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm);
 
-        sp = getSharedPreferences("MyUserPrefs", Context.MODE_PRIVATE);
 
-        timeHour = findViewById(R.id.etHour);
-        timeMinute = findViewById(R.id.etMinute);
-        setTime = findViewById(R.id.btnTime);
-        setAlarm = findViewById(R.id.btnAlarm);
+        alarmList = new ArrayList<>();
+        adapter = new AlarmAdapter(this, alarmList);
 
-        Switch simpleSwitch1 = (Switch) findViewById(R.id.simpleSwitch1);
-        Button cancelalarm = (Button) findViewById(R.id.cancelalarm);
-        String statusSwitch1 = sp.getString("statusSwitch1", "1");
 
-        SharedPreferences.Editor editor = sp.edit();
 
-        if (statusSwitch1.equals("1")) {
-            simpleSwitch1.setChecked(true);
-        }
-        if (statusSwitch1.equals("0")) {
-            simpleSwitch1.setChecked(false);
-        }
+        ListView alarmListView = findViewById(R.id.alarmListView);
+        alarmListView.setAdapter(adapter);
 
-        simpleSwitch1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (simpleSwitch1.isChecked()) {
-                    editor.putString("statusSwitch1", "1");
-                    editor.apply();
-                }
-                if (!simpleSwitch1.isChecked()) {
-                    editor.putString("statusSwitch1", "0");
-                    editor.apply();
-                }
+        Button setAlarmButton = findViewById(R.id.setAlarmButton);
+        setAlarmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTimePickerDialog();
             }
         });
 
-        setTime.setOnClickListener((v) -> {
-            calendar = Calendar.getInstance();
-            currentHour = calendar.get(Calendar.HOUR_OF_DAY);
-            currentMinute = calendar.get(Calendar.MINUTE);
-            timePickerDialog = new TimePickerDialog(AlarmActivity.this, new TimePickerDialog.OnTimeSetListener() {
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        saveAlarms();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadAlarms();
+    }
+
+    private void saveAlarms() {
+        SharedPreferences sharedPreferences = getSharedPreferences("alarms", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String alarmsJson = gson.toJson(alarmList);
+        editor.putString("alarms", alarmsJson);
+        editor.apply();
+    }
+
+    private void loadAlarms() {
+        SharedPreferences sharedPreferences = getSharedPreferences("alarms", MODE_PRIVATE);
+        String alarmsJson = sharedPreferences.getString("alarms", null);
+        if (alarmsJson != null) {
+            Gson gson = new Gson();
+            Type type = new TypeToken<ArrayList<Alarm>>() {}.getType();
+            ArrayList<Alarm> savedAlarms = gson.fromJson(alarmsJson, type);
+            if (savedAlarms != null) {
+                alarmList.clear();
+                alarmList.addAll(savedAlarms);
+                adapter.notifyDataSetChanged();
+            }
+        }
+    }
+
+
+
+    private void showTimePickerDialog() {
+        TimePickerFragment newFragment = new TimePickerFragment();
+        newFragment.setOnTimeSetListener(new TimePickerFragment.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(int hourOfDay, int minute) {
+                AlarmActivity.this.hourOfDay = hourOfDay;
+                AlarmActivity.this.minute = minute;
+                showDayPickerDialog();
+            }
+        });
+        newFragment.show(getSupportFragmentManager(), "timePicker");
+    }
+
+    private void showDayPickerDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_day_picker, null);
+        builder.setView(dialogView);
+
+        CheckBox[] checkBoxes = new CheckBox[7];
+        checkBoxes[0] = dialogView.findViewById(R.id.checkBoxMonday);
+        checkBoxes[1] = dialogView.findViewById(R.id.checkBoxTuesday);
+        checkBoxes[2] = dialogView.findViewById(R.id.checkBoxWednesday);
+        checkBoxes[3] = dialogView.findViewById(R.id.checkBoxThursday);
+        checkBoxes[4] = dialogView.findViewById(R.id.checkBoxFriday);
+        checkBoxes[5] = dialogView.findViewById(R.id.checkBoxSaturday);
+        checkBoxes[6] = dialogView.findViewById(R.id.checkBoxSunday);
+
+        Button confirmButton = dialogView.findViewById(R.id.buttonConfirmDays);
+        AlertDialog dialog = builder.create();
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (int i = 0; i < 7; i++) {
+                    daysOfWeek[i] = checkBoxes[i].isChecked();
+                }
+                dialog.dismiss();
+
+                showMessageDialog();
+            }
+        });
+
+        dialog.show();
+
+    }
+
+    private void showMessageDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_alarm_message, null);
+        builder.setView(dialogView);
+
+
+
+        Button confirmMessageButton = dialogView.findViewById(R.id.buttonConfirmMessage);
+        AlertDialog dialog = builder.create();
+
+        EditText editText = dialogView.findViewById(R.id.alarmMessageEditText);
+        confirmMessageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                message = editText.getText().toString();
+                setRecurringAlarms(hourOfDay, minute, daysOfWeek,message);
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+    private void setRecurringAlarms(int hourOfDay, int minute, boolean[] daysOfWeek, String message) {
+        for (int i = 0; i < 7; i++) {
+            if (daysOfWeek[i]) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                calendar.set(Calendar.MINUTE, minute);
+                calendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.MILLISECOND, 0);
+                calendar.set(Calendar.DAY_OF_WEEK, i + 2); // Calendar.SUNDAY is 1
+
+                if (calendar.getTimeInMillis() <= System.currentTimeMillis()) {
+                    calendar.add(Calendar.WEEK_OF_YEAR, 1);
+                }
+
+                int requestCode = (int) System.currentTimeMillis() + i;
+
+                Alarm alarm = new Alarm(hourOfDay, minute, i, requestCode,message);
+                alarmList.add(alarm);
+                adapter.notifyDataSetChanged();
+            }
+        }
+    }
+
+
+
+    private void stopAlarm(Alarm alarm) {
+        Toast.makeText(this, (getDayName(alarm.getDayOfWeek()) + alarm.getHourOfDay() + alarm.getMinute() + alarm.getMessage()), Toast.LENGTH_LONG).show();
+
+        String path;
+
+        if (alarm.getMinute()<10){
+            path = "0" + String.valueOf(alarm.getMinute());
+        }else{
+            path = String.valueOf(alarm.getMinute());
+        }
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Devices").child(ID).child("Alarms").child(String.valueOf(alarm.getDayOfWeek()));
+        reference.child(String.valueOf(alarm.getHourOfDay()) +path).removeValue();
+
+        alarmList.remove(alarm);
+        adapter.notifyDataSetChanged();
+        Toast.makeText(this, "Alarm Canceled", Toast.LENGTH_SHORT).show();
+    }
+
+    private class AlarmAdapter extends ArrayAdapter<Alarm> {
+
+        public AlarmAdapter(Context context, ArrayList<Alarm> alarms) {
+            super(context, 0, alarms);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.alarm_list_item, parent, false);
+            }
+
+            Alarm alarm = getItem(position);
+
+            TextView alarmTimeTextView = convertView.findViewById(R.id.alarmTimeTextView);
+            TextView alarmMessageTextView = convertView.findViewById(R.id.alarmMessageTextView);
+            Button deleteAlarmButton = convertView.findViewById(R.id.deleteAlarmButton);
+
+            String dayName = getDayName(alarm.getDayOfWeek());
+            String alarmTime = dayName + " at " + alarm.getHourOfDay() + ":" + (alarm.getMinute() < 10 ? "0" + alarm.getMinute() : alarm.getMinute());
+            alarmTimeTextView.setText(alarmTime);
+            alarmMessageTextView.setText(message);
+
+            String path;
+
+            if (alarm.getMinute()<10){
+                path = "0" + String.valueOf(alarm.getMinute());
+            }else{
+                path = String.valueOf(alarm.getMinute());
+            }
+
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Devices").child(ID).child("Alarms").child(String.valueOf(alarm.getDayOfWeek()));
+            reference.child(String.valueOf(alarm.getHourOfDay()) +path).setValue(alarm.getMessage());
+
+            deleteAlarmButton.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onTimeSet(TimePicker timePicker, int hourOfDay, int minutes) {
-                    timeHour.setText(String.format("%02d", hourOfDay));
-                    timeMinute.setText(String.format("%02d", minutes));
+                public void onClick(View v) {
+                    stopAlarm(alarm);
                 }
-            }, currentHour, currentMinute, false);
+            });
 
-            timePickerDialog.show();
-
-        });
-
-        setAlarm.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("QueryPermissionsNeeded")
-            @Override
-            public void onClick(View v) {
-                String statusSwitch1 = sp.getString("statusSwitch1", "1");
-                if (statusSwitch1.equals("1")) {
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("mm");
-                    String currenttimeMinute = dateFormat.format(new Date());
-                    SimpleDateFormat dateFormat2 = new SimpleDateFormat("hh");
-                    String currenttimeHour = dateFormat2.format(new Date());
-                    int hrdiff = Integer.parseInt(timeHour.getText().toString()) - Integer.parseInt(currenttimeHour);
-                    int hrinms = hrdiff * 3600000;
-                    int mindiff = Integer.parseInt(timeMinute.getText().toString()) - Integer.parseInt(currenttimeMinute);
-                    int mininms = mindiff * 60000;
-                    int totalms = hrinms + mininms;
-                    editor.putInt("totalms", totalms);
-                    editor.apply();
-                    startAlarm();
-                }
-
-                if (!timeHour.getText().toString().isEmpty() && !timeMinute.getText().toString().isEmpty()) {
-                    Intent intent = new Intent(AlarmClock.ACTION_SET_ALARM);
-                    intent.putExtra(AlarmClock.EXTRA_HOUR, Integer.parseInt(timeHour.getText().toString()));
-                    intent.putExtra(AlarmClock.EXTRA_MINUTES, Integer.parseInt(timeMinute.getText().toString()));
-                    intent.putExtra(AlarmClock.EXTRA_MESSAGE, "Alarm Notifcation");
-                    if (intent.resolveActivity(getPackageManager()) != null) {
-                        startActivity(intent);
-                    } else {
-                        Toast.makeText(AlarmActivity.this, "There is no app that support this action", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(AlarmActivity.this, "Please choose a time", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        cancelalarm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cancelAlarm();
-            }
-        });
+            return convertView;
+        }
     }
 
-    @SuppressLint("ScheduleExactAlarm")
-    private void startAlarm() {
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(this, AlertReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1, intent,FLAG_IMMUTABLE);
-        Integer totalms = sp.getInt("totalms", 0);
-        Integer seconds = sp.getInt("totalms", 0)/1000;
-        Toast.makeText(AlarmActivity.this, "Notifcation and Music will ring in " + seconds + "s" , Toast.LENGTH_SHORT).show();
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+totalms, pendingIntent);
-    }
-
-    private void cancelAlarm() {
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(this, AlertReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1, intent, FLAG_IMMUTABLE);
-        alarmManager.cancel(pendingIntent);
-        Toast.makeText(AlarmActivity.this, "Nofication and Music Alarm cancelled", Toast.LENGTH_SHORT).show();
+    private String getDayName(int dayIndex) {
+        switch (dayIndex) {
+            case 0:
+                return "Monday";
+            case 1:
+                return "Tuesday";
+            case 2:
+                return "Wednesday";
+            case 3:
+                return "Thursday";
+            case 4:
+                return "Friday";
+            case 5:
+                return "Saturday";
+            case 6:
+                return "Sunday";
+            default:
+                return "";
+        }
     }
 }

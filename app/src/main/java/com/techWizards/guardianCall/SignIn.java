@@ -62,7 +62,6 @@ public class SignIn extends AppCompatActivity {
                                             public void onDataChange(DataSnapshot snapshot) {
                                                 if(snapshot.exists()){
                                                     deviceId = snapshot.child("deviceId").getValue(String.class);
-
                                                     Intent intent = new Intent(SignIn.this, MainActivity.class);
                                                     intent.putExtra("DeviceID", deviceId);
                                                     startActivity(intent);
@@ -77,6 +76,8 @@ public class SignIn extends AppCompatActivity {
                                                 Toast.makeText(SignIn.this, "Database error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                                             }
                                         });
+
+
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
                                     @Override

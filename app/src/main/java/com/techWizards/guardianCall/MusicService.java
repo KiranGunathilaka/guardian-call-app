@@ -1,11 +1,12 @@
 package com.techWizards.guardianCall;
 
-import static com.techWizards.guardianCall.LoginActivity.ID;
+import static com.techWizards.guardianCall.MainActivity.deviceId;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Build;
@@ -24,15 +25,19 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+
+
+
 public class MusicService extends Service {
     private static final String CHANNEL_ID = "MusicServiceChannel";
+    private static final String POPUP_CHANNEL_ID = "PopupNotificationChannel";
     public static MediaPlayer mp;
 
     @Override
     public void onCreate() {
         super.onCreate();
         FirebaseApp.initializeApp(this);
-        createNotificationChannel();
+        createNotificationChannels();
     }
 
     @Nullable
@@ -41,35 +46,58 @@ public class MusicService extends Service {
         return null;
     }
 
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Devices").child(deviceId).child("Buttons").child("1").child("Status");
+        DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference().child("Devices").child(deviceId).child("Buttons").child("2").child("Status");
 
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child(ID).child("Buttons").child("2").child("Status");
+
+        //referenceAlarm = FirebaseDatabase.getInstance().getReference().child("Devices").child(deviceId).child("Alarms");
+
+
+
 
 
         mp = MediaPlayer.create(this, Settings.System.DEFAULT_RINGTONE_URI);
 
-
-
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                if (snapshot.exists()){
+                if (snapshot.exists()) {
                     String statusFromDB = String.valueOf(snapshot.getValue(Integer.class));
-                    Toast.makeText(MusicService.this, statusFromDB, Toast.LENGTH_LONG).show();
 
-                    if (statusFromDB.equals("1")){
+
+                    if (statusFromDB.equals("1")) {
                         mp.setLooping(true);
                         mp.start();
-
-                        // Write a code below with the activity you want to open
-
-
-
+                        showPopupNotification();
                     }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                if (mp != null) {
+                    mp.stop();
+                    mp.release();
+                    mp = null;
+                }
+            }
+        });
+
+        reference2.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    String statusFromDB = String.valueOf(snapshot.getValue(Integer.class));
 
 
+                    if (statusFromDB.equals("1")) {
+                        mp.setLooping(true);
+                        mp.start();
+                        showPopupNotification();
+                    }
                 }
             }
 
@@ -84,16 +112,19 @@ public class MusicService extends Service {
         });
 
 
-        Intent notificationIntent = new Intent(this,MainActivity.class); // Change this to your main activity
+
+
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        notificationIntent.putExtra("DeviceID", deviceId);
         PendingIntent pendingIntent = PendingIntent.getActivity(this,
                 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Guardian Call Service")
                 .setContentText("Running background")
-                .setSmallIcon(R.drawable.baseline_account_circle_24) // Replace with your app's icon
+                .setSmallIcon(R.drawable.ic_launcher_background) // Replace with your app's icon
                 .setContentIntent(pendingIntent)
-                .setPriority(NotificationCompat.PRIORITY_MAX);
+                .setPriority(NotificationCompat.PRIORITY_LOW);
 
         startForeground(1, notificationBuilder.build());
 
@@ -110,7 +141,7 @@ public class MusicService extends Service {
         super.onDestroy();
     }
 
-    private void createNotificationChannel() {
+    private void createNotificationChannels() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "Music Service Channel";
             String description = "Channel for Music Service";
@@ -120,6 +151,34 @@ public class MusicService extends Service {
 
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
+
+            CharSequence popupName = "Popup Notification Channel";
+            String popupDescription = "Channel for Popup Notifications";
+            int popupImportance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel popupChannel = new NotificationChannel(POPUP_CHANNEL_ID, popupName, popupImportance);
+            popupChannel.setDescription(popupDescription);
+
+            notificationManager.createNotificationChannel(popupChannel);
         }
+    }
+
+    private void showPopupNotification() {
+        Intent popupIntent = new Intent(this, MainActivity.class);
+
+        popupIntent.putExtra("DeviceID", deviceId);
+
+        PendingIntent popupPendingIntent = PendingIntent.getActivity(this,
+                0, popupIntent, PendingIntent.FLAG_IMMUTABLE);
+
+        NotificationCompat.Builder popupNotificationBuilder = new NotificationCompat.Builder(this, POPUP_CHANNEL_ID)
+                .setContentTitle("Guardian Call Alert")
+                .setContentText("")
+                .setSmallIcon(R.drawable.ic_launcher_background) // Replace with your app's icon
+                .setContentIntent(popupPendingIntent)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setAutoCancel(true);
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(2, popupNotificationBuilder.build());
     }
 }

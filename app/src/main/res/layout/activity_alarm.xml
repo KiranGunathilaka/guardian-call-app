@@ -1,95 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".AlarmActivity"
+    android:background = "@drawable/gradient"
+    android:screenOrientation="portrait"
+    android:fillViewport="true">
 
-    <EditText
-        android:id="@+id/etHour"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Hour"
-        android:inputType="text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/btnAlarm"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Set Alarm"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toEndOf="@+id/btnTime"
-        app:layout_constraintTop_toBottomOf="@+id/etMinute" />
+        <!-- Horizontal Guidelines for left and right padding -->
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.0" />
 
-    <Button
-        android:id="@+id/btnTime"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Set Time"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btnAlarm"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etMinute" />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="1.0" />
 
-    <EditText
-        android:id="@+id/etMinute"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:ems="10"
-        android:hint="Minute"
-        android:inputType="textPersonName"
-        app:layout_constraintTop_toBottomOf="@+id/etHour" />
+        <!-- Vertical Guidelines for top and bottom padding -->
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_image_bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="98dp" />
 
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_form_bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="856dp" />
 
-    <Switch
-        android:id="@+id/simpleSwitch1"
-        android:layout_width="180dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="100dp"
-        android:layout_marginTop="150dp"
-        android:checked="true"
-        android:elevation="2dp"
-        android:text="Notification\n +Overlap with Music\n[Plays for 10s]"
-        android:textColor="@color/black"
-        android:textOff="Off"
-        android:textOn="On"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        tools:visibility="visible" />
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/guideline_image_bottom"
+            app:layout_constraintStart_toStartOf="@id/guideline_left"
+            app:layout_constraintEnd_toEndOf="@id/guideline_right"
+            app:layout_constraintVertical_bias="0.16"
+            >
 
-    <Button
-        android:id="@+id/cancelalarm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="110dp"
-        android:layout_marginTop="300dp"
-        android:background="#009284"
-        android:padding="10dp"
-        android:text="Cancel Alarm"
-        android:textColor="#fff"
-        android:textStyle="bold"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        tools:visibility="visible" />
+            <!-- Image on Top -->
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/guardian_call_logo"
+                android:paddingLeft="10dp"
+                android:paddingTop="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="10dp"
+                android:src="@drawable/logo_no_background" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="393dp"
+            android:layout_height="756dp"
+            app:layout_constraintEnd_toEndOf="@id/guideline_right"
+            app:layout_constraintStart_toStartOf="@id/guideline_left"
+            app:layout_constraintTop_toTopOf="@id/guideline_image_bottom"
+            app:layout_constraintWidth_max="400dp">
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <Button
+                android:id="@+id/setAlarmButton"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_marginTop="10dp"
+
+                android:background="@drawable/rounded_button"
+                android:maxWidth="300dp"
+                android:maxHeight="90dp"
+
+                android:text="@string/add_alarm"
+                android:textColor="#FFFFFF"
+                app:autoSizeMaxTextSize="24sp"
+                app:autoSizeMinTextSize="12sp"
+
+                app:autoSizeStepGranularity="2sp"
+                app:autoSizeTextType="uniform"
+                app:layout_constraintWidth_max="400dp" />
+
+            <ListView
+                android:id="@+id/alarmListView"
+                android:layout_width="347dp"
+                android:layout_height="620dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp" />
+        </FrameLayout>
+
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
+
+
+

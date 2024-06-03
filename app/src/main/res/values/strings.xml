@@ -14,4 +14,9 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="enter_device_id">Enter Device ID</string>
     <string name="enter_secret_key">Enter Secret Key</string>
+    <string name="start_service">Start Service</string>
+    <string name="stop_service">Stop Service</string>
+    <string name="set_alarm">Set Alarm</string>
+    <string name="add_alarm">Add Alarm</string>
+    <string name="button_battery_percentage">Button Battery Percentage</string>
 </resources>
