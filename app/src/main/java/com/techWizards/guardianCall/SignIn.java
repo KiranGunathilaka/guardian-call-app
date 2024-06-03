@@ -74,22 +74,23 @@ public class SignIn extends AppCompatActivity {
                                         });
 
                                         Intent intent = new Intent(SignIn.this, MainActivity.class);
+                                        startActivity(intent);
                                         intent.putExtra("DeviceID", deviceId);
                                         finish();
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(SignIn.this, "Login Failed", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(SignIn.this, "Login Failed. Check your credentials", Toast.LENGTH_SHORT).show();
                                     }
                                 });
                     } else {
-                        signInPwd.setError("Empty fields are not allowed");
+                        signInPwd.setError("Password can't be empty");
                     }
                 } else if (email.isEmpty()) {
-                    signInEmail.setError("Empty fields are not allowed");
+                    signInEmail.setError("Email can't be empty");
                 } else {
-                    signInEmail.setError("Please enter correct email");
+                    signInEmail.setError("Invalid email address");
                 }
             }
         });
