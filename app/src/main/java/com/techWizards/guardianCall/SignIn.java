@@ -57,11 +57,16 @@ public class SignIn extends AppCompatActivity {
 
                                         String userId = authResult.getUser().getUid();
                                         DatabaseReference usersDatabase = FirebaseDatabase.getInstance().getReference("Users");
-                                        usersDatabase.child(userId).child("deviceId").addListenerForSingleValueEvent(new ValueEventListener() {
+                                        usersDatabase.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(DataSnapshot snapshot) {
                                                 if(snapshot.exists()){
                                                     deviceId = snapshot.child("deviceId").getValue(String.class);
+
+                                                    Intent intent = new Intent(SignIn.this, MainActivity.class);
+                                                    intent.putExtra("DeviceID", deviceId);
+                                                    startActivity(intent);
+                                                    finish();
                                             } else{
                                                     Toast.makeText(SignIn.this, "Something went wrong. Contact customer Service" , Toast.LENGTH_SHORT).show();
                                                 }
@@ -72,11 +77,6 @@ public class SignIn extends AppCompatActivity {
                                                 Toast.makeText(SignIn.this, "Database error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                                             }
                                         });
-
-                                        Intent intent = new Intent(SignIn.this, MainActivity.class);
-                                        startActivity(intent);
-                                        intent.putExtra("DeviceID", deviceId);
-                                        finish();
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
                                     @Override

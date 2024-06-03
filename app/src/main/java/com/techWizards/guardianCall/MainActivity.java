@@ -7,19 +7,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 
 public class MainActivity extends AppCompatActivity {
 
-
     Button Alarm;
-
     Button start;
-
     Button stop;
-
     Button stopService;
-
 
 
 
@@ -33,6 +29,9 @@ public class MainActivity extends AppCompatActivity {
         stop = findViewById(R.id.StopAlert);
         stopService = findViewById(R.id.stopService);
 
+        Intent intent = getIntent();
+        String devID = intent.getStringExtra("DeviceID");
+        Toast.makeText(MainActivity.this, String.valueOf(devID) , Toast.LENGTH_SHORT).show();
 
 
 
