@@ -33,6 +33,7 @@ android {
 }
 
 dependencies {
+    implementation ("com.google.code.gson:gson:2.8.8")
     implementation("pl.droidsonroids.gif:android-gif-drawable:1.2.23")
     implementation("androidx.compose.material3:material3-window-size-class:1.2.1")
     implementation(libs.appcompat)

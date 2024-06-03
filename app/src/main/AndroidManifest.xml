@@ -21,11 +21,15 @@
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
         tools:targetApi="31">
         <activity
+            android:name=".ButtonActivity"
+            android:exported="false" />
+        <activity
             android:name=".Register"
             android:exported="true" />
         <activity
             android:name=".AlarmActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".MainActivity"
             android:exported="true" />
@@ -38,8 +42,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <receiver android:name=".AlertReceiver" />
 
         <service
             android:name=".MusicService"
