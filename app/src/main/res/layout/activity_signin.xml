@@ -86,7 +86,7 @@
                 android:id="@+id/logInButton"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
-                android:background="@drawable/rounded_button"
+                android:background="@drawable/rounded_button_auth"
                 android:maxWidth="300dp"
                 android:maxHeight="100dp"
                 android:text="@string/button_login"

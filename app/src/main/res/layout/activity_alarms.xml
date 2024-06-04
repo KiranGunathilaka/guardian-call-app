@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Main"
+    android:background = "@drawable/gradient"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.08" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.92" />
+
+        <!-- "Buttons" text on top of screen-->
+        <TextView
+            android:id="@+id/Alarms_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/Alarms"
+            android:textColor="@color/white"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/back_to_alarms" />
+
+        <!-- go back to alarms button-->
+        <Button
+            android:id="@+id/back_to_alarms"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/rounded_button"
+            android:drawableEnd="@drawable/ic_forward"
+            android:drawablePadding="4dp"
+            android:paddingStart="25dp"
+            android:text="@string/Buttons"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="@+id/cardView"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/settingsIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableEnd="@drawable/ic_settings"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/cardView"
+            android:layout_marginTop="16dp"
+            />
+
+        <TextView
+            android:id="@+id/setNewAlarmIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableRight="@drawable/ic_bell"
+            android:paddingStart="65dp"
+            android:paddingEnd="35dp"
+            android:background="@drawable/alarm_circle"
+            app:layout_constraintStart_toStartOf="@+id/cardView"
+            app:layout_constraintEnd_toEndOf="@+id/cardView"
+            app:layout_constraintTop_toBottomOf="@+id/Alarms_top"
+            app:layout_constraintBottom_toTopOf="@id/cardView"
+            android:layout_marginTop="16dp"
+            />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView"
+            android:layout_width="0dp"
+            android:layout_height="110dp"
+            android:layout_marginTop="332dp"
+            app:cardBackgroundColor="#590668AF"
+            app:cardCornerRadius="32dp"
+            app:layout_constraintStart_toStartOf="@id/guideline_left"
+            app:layout_constraintEnd_toEndOf="@id/guideline_right"
+            app:layout_constraintTop_toBottomOf="@+id/Alarms_top"
+            app:layout_constraintWidth_max="650dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/titleTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="37dp"
+                    android:fontFamily="@font/monospace"
+                    android:text="@string/name"
+                    android:textColor="#FFFFFF"
+                    android:textSize="28sp"
+                    android:layout_marginStart="5dp"
+                    app:layout_constraintEnd_toStartOf="@id/switchToggle"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/timeTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="8:00"
+                    android:textSize="29sp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="5dp"
+                    android:textColor="#FFFFFF"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/titleTextView"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <TextView
+                    android:id="@+id/ampmTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="am"
+                    android:textSize="20sp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginBottom="3dp"
+                    android:textColor="#FFFFFF"
+                    app:layout_constraintStart_toEndOf="@id/timeTextView"
+                    app:layout_constraintBottom_toBottomOf="@id/timeTextView"/>
+
+                <TextView
+                    android:id="@+id/daysTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mon, Tue, Wed"
+                    android:layout_marginTop="15dp"
+                    android:textSize="14sp"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginRight="10dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/titleTextView"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <Switch
+                    android:id="@+id/switchToggle"
+                    android:layout_width="49dp"
+                    android:layout_height="47dp"
+                    android:checked="true"
+                    android:scaleX="1.5"
+                    android:scaleY="1.5"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginBottom="20dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

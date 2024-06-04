@@ -19,4 +19,8 @@
     <string name="set_alarm">Set Alarm</string>
     <string name="add_alarm">Add Alarm</string>
     <string name="button_battery_percentage">Button Battery Percentage</string>
+    <string name="Buttons">Buttons</string>
+    <string name="Alarms">Alarms</string>
+    <string name="Button_1">Button 1\n</string>
+    <string name="name">Name</string>
 </resources>
