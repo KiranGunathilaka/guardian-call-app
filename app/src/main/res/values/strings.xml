@@ -22,5 +22,8 @@
     <string name="Buttons">Buttons</string>
     <string name="Alarms">Alarms</string>
     <string name="Button_1">Button 1\n</string>
-    <string name="name">Name</string>
+    <string name="name">Message</string>
+    <string name="log_out">Log Out</string>
+    <string name="users_registered_for_this_device">Users registered for this device :</string>
+    <string name="remove">Remove</string>
 </resources>

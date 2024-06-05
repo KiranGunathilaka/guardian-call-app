@@ -108,6 +108,7 @@
                     android:textColor="#FFFFFF"
                     android:textSize="28sp"
                     android:layout_marginStart="5dp"
+                    android:ellipsize="end"
                     app:layout_constraintEnd_toStartOf="@id/switchToggle"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
