@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -160,6 +161,7 @@ public class Register extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(Register.this, SignIn.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -167,24 +169,28 @@ public class Register extends AppCompatActivity {
 
     private boolean checkUsernameExists(String eMail) {
         Query query = usersDatabase.orderByChild("email").equalTo(eMail);
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    Snackbar.make(email, "Email already exists", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.RED).show();
-                    usernameExists = true;
-                } else {
-                    Snackbar.make(email, "Email is available", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.GREEN).show();
-                    usernameExists = false;
+        if (Patterns.EMAIL_ADDRESS.matcher(eMail).matches()) {
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        Snackbar.make(email, "Email already exists", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.RED).show();
+                        usernameExists = true;
+                    } else {
+                        Snackbar.make(email, "Email is available", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.GREEN).show();
+                        usernameExists = false;
+                    }
                 }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Handle possible errors.
-                Toast.makeText(Register.this, "Database error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Handle possible errors.
+                    Toast.makeText(Register.this, "Database error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }else{
+            Snackbar.make(email, "Not a valid Email address", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.RED).show();
+        }
         return usernameExists;
     }
 
@@ -197,6 +203,7 @@ public class Register extends AppCompatActivity {
                     deviceIdExists = true;
                 } else {
                     Snackbar.make(email, "Device ID does not exist", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.RED).show();
+                    devId.setError("Device ID does not exist");
                     deviceIdExists = false;
                 }
             }

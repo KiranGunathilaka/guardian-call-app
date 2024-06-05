@@ -169,5 +169,92 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
 
+        <!--card 2-->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView2"
+            android:layout_width="0dp"
+            android:layout_height="110dp"
+            android:layout_marginTop="452dp"
+            app:cardBackgroundColor="#590668AF"
+            app:cardCornerRadius="32dp"
+            app:layout_constraintStart_toStartOf="@id/guideline_left"
+            app:layout_constraintEnd_toEndOf="@id/guideline_right"
+            app:layout_constraintTop_toBottomOf="@+id/Alarms_top"
+            app:layout_constraintWidth_max="650dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/titleTextView2"
+                    android:layout_width="0dp"
+                    android:layout_height="37dp"
+                    android:fontFamily="@font/monospace"
+                    android:text="@string/name"
+                    android:textColor="#FFFFFF"
+                    android:textSize="28sp"
+                    android:layout_marginStart="5dp"
+                    android:ellipsize="end"
+                    app:layout_constraintEnd_toStartOf="@id/switchToggle"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/timeTextView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="8:00"
+                    android:textSize="29sp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="5dp"
+                    android:textColor="#FFFFFF"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/titleTextView2"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <TextView
+                    android:id="@+id/ampmTextView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="am"
+                    android:textSize="20sp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginBottom="3dp"
+                    android:textColor="#FFFFFF"
+                    app:layout_constraintStart_toEndOf="@id/timeTextView2"
+                    app:layout_constraintBottom_toBottomOf="@id/timeTextView2"/>
+
+                <TextView
+                    android:id="@+id/daysTextView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mon, Tue, Wed"
+                    android:layout_marginTop="15dp"
+                    android:textSize="14sp"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginRight="10dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/titleTextView2"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <Switch
+                    android:id="@+id/switchToggle2"
+                    android:layout_width="49dp"
+                    android:layout_height="47dp"
+                    android:checked="false"
+                    android:scaleX="1.5"
+                    android:scaleY="1.5"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginBottom="20dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

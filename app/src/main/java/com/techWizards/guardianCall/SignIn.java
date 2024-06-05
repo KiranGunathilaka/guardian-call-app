@@ -1,6 +1,9 @@
 package com.techWizards.guardianCall;
 
+import static androidx.core.content.SharedPreferencesKt.edit;
+
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
@@ -29,6 +32,7 @@ public class SignIn extends AppCompatActivity {
     private Button signInButton;
     private TextView registerRedirect;
     private String deviceId;
+    private SharedPreferences loginDetails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +65,15 @@ public class SignIn extends AppCompatActivity {
                                             public void onDataChange(DataSnapshot snapshot) {
                                                 if(snapshot.exists()){
                                                     deviceId = snapshot.child("deviceId").getValue(String.class);
-                                                    Intent intent = new Intent(SignIn.this, MainActivity.class);
-                                                    intent.putExtra("DeviceID", deviceId);
+
+                                                    loginDetails = getSharedPreferences("loginDetails", MODE_PRIVATE);
+                                                    SharedPreferences.Editor editor = loginDetails.edit();
+                                                    editor.putString("userId", userId);
+                                                    editor.putString("userEmail", email);
+                                                    editor.putString("deviceId", deviceId);
+                                                    editor.apply();
+
+                                                    Intent intent = new Intent(SignIn.this, Main.class);
                                                     startActivity(intent);
                                                     finish();
                                             } else{
