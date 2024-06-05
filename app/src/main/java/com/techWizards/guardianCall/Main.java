@@ -30,6 +30,7 @@ public class Main extends AppCompatActivity {
 
         settings = findViewById(R.id.settingsIcon);
         setAlarm = findViewById(R.id.setNewAlarmIcon);
+        buttonsRedirect = findViewById(R.id.to_buttons);
 
         sharedPreferences = getSharedPreferences("loginDetails", MODE_PRIVATE);
         deviceId = sharedPreferences.getString("deviceId", "defaultStringValue");
@@ -38,6 +39,14 @@ public class Main extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Main.this, Settings.class);
+                startActivity(intent);
+            }
+        });
+
+        buttonsRedirect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Main.this, ButtonActivity.class);
                 startActivity(intent);
             }
         });

@@ -95,34 +95,21 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/emailsTextView1"
+                android:id="@+id/thisUserField"
                 android:layout_width="match_parent"
-                android:layout_height="35dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
+                android:layout_height="40dp"
+                android:paddingLeft="30px"
                 android:background="@drawable/text_box_border"
-                android:text="Email 1"
+                android:text="You"
+                android:textStyle="bold"
                 android:gravity="center_vertical"
+
                 android:textColor="#FFFFFF"
                 android:textSize="20sp"
                 android:fontFamily="@font/roboto_regular"
                 android:layout_marginTop="10dp"
-                app:layout_constraintWidth_max="450dp" />
-
-            <TextView
-                android:id="@+id/emailsTextView2"
-                android:layout_width="match_parent"
-                android:layout_height="35dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:background="@drawable/text_box_border"
-                android:text="Email 2"
-                android:gravity="center_vertical"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp"
-                android:fontFamily="@font/roboto_regular"
-                android:layout_marginTop="5dp"
-                app:layout_constraintWidth_max="450dp" />
+                app:layout_constraintWidth_max="450dp"
+                tools:ignore="RtlCompat" />
 
         </LinearLayout>
 

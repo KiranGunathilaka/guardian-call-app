@@ -43,7 +43,7 @@
 
         <!-- go back to alarms button-->
         <Button
-            android:id="@+id/back_to_alarms"
+            android:id="@+id/to_buttons"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"

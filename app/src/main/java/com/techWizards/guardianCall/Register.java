@@ -159,8 +159,6 @@ public class Register extends AppCompatActivity {
         loginRedirect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Register.this, SignIn.class);
-                startActivity(intent);
                 finish();
             }
         });
