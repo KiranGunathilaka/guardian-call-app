@@ -71,16 +71,17 @@
             android:id="@+id/setNewAlarmIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/alarm_circle"
             android:drawableRight="@drawable/ic_bell"
             android:paddingStart="65dp"
             android:paddingEnd="35dp"
-            android:background="@drawable/alarm_circle"
-            app:layout_constraintStart_toStartOf="@+id/cardView"
-            app:layout_constraintEnd_toEndOf="@+id/cardView"
-            app:layout_constraintTop_toBottomOf="@+id/Alarms_top"
             app:layout_constraintBottom_toTopOf="@id/cardView"
-            android:layout_marginTop="16dp"
-            />
+            app:layout_constraintEnd_toEndOf="@+id/cardView"
+            app:layout_constraintHorizontal_bias="0.487"
+            app:layout_constraintStart_toStartOf="@+id/cardView"
+            app:layout_constraintTop_toBottomOf="@+id/Alarms_top"
+            app:layout_constraintVertical_bias="0.49" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardView"
