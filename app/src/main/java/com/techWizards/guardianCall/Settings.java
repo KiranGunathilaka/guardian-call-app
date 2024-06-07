@@ -63,7 +63,7 @@ public class Settings extends AppCompatActivity {
                 View view0 = getLayoutInflater().inflate(R.layout.email_card, null);
                 TextView textView0 = view0.findViewById(R.id.emailsTextView);
                 textView0.setText(loggedEmail);
-                textView0.setPadding(30,16,0,16);
+                textView0.setPadding(30,15,0,15);
                 textView0.setTextSize(21);
 
                 LinearLayout.LayoutParams layoutParams0 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);

@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,14 +13,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Main extends AppCompatActivity {
@@ -41,6 +38,7 @@ public class Main extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarms);
 
+
         settings = findViewById(R.id.settingsIcon);
         setAlarm = findViewById(R.id.setNewAlarmIcon);
         buttonsRedirect = findViewById(R.id.to_buttons);
@@ -50,9 +48,11 @@ public class Main extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("loginDetails", MODE_PRIVATE);
         deviceId = sharedPreferences.getString("deviceId", "defaultStringValue");
 
+        startService(new Intent(Main.this, NotificationService.class));
+
         alarmsDatabase = FirebaseDatabase.getInstance().getReference("Devices").child(deviceId).child("Alarms");
         alarmsDatabase.addValueEventListener(new ValueEventListener() {
-
+            //handle null pointer exception if week day is empty later
             //getting alarm data from the firebase and assigning them to array[weekday][nth alarm][alarmTime, message]
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -224,13 +224,13 @@ public class Main extends AppCompatActivity {
             }
         }
 
-        for (String[][] e : list){
-            System.out.print(e[0][0] + "  "+ e[1][0] + " ---  ");
-            for ( String f: e[2]){
-                System.out.print(f + " ");
-            }
-            System.out.println("");
-        }
+//        for (String[][] e : list){
+//            System.out.print(e[0][0] + "  "+ e[1][0] + " ---  ");
+//            for ( String f: e[2]){
+//                System.out.print(f + " ");
+//            }
+//            System.out.println("");
+//        }
 
         return list;
     }
