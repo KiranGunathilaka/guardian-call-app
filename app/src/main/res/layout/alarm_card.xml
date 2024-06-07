@@ -7,14 +7,16 @@
     android:layout_width="match_parent"
     android:layout_height="110dp"
     android:layout_marginTop="10dp"
-    app:cardBackgroundColor="#590668AF"
+    app:cardBackgroundColor="#69033E68"
     app:cardCornerRadius="32dp"
-    app:layout_constraintWidth_max="650dp">
+    app:layout_constraintWidth_max="650dp"
+    android:elevation="5dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:padding="16dp"
+        android:background="#69033E68">
 
         <TextView
             android:id="@+id/titleTextView"

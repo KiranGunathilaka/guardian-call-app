@@ -28,7 +28,7 @@ public class Settings extends AppCompatActivity {
     private String deviceId, loggedEmail;
     private DatabaseReference usersDatabase;
     private Button logoutBtn , removeBtn;
-    private TextView backIcon, devIdField, currentUserField;
+    private TextView backIcon, devIdField;
     private SharedPreferences sharedPreferences;
     private LinearLayout linearLayout;
 
@@ -44,12 +44,11 @@ public class Settings extends AppCompatActivity {
         backIcon = findViewById(R.id.backIcon);
         logoutBtn = findViewById(R.id.logOutButton);
         devIdField = findViewById(R.id.deviceId);
-        currentUserField = findViewById(R.id.thisUserField);
+
         linearLayout = findViewById(R.id.linearLayout);
 
         //Setting devID and current User email in the relevant TextViews
         devIdField.setText(deviceId);
-        currentUserField.setText(loggedEmail);
 
         usersDatabase = FirebaseDatabase.getInstance().getReference("Users");
         Query query = usersDatabase.orderByChild("deviceId").equalTo(deviceId);
@@ -58,6 +57,21 @@ public class Settings extends AppCompatActivity {
             String email;
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                linearLayout.removeAllViews();
+
+                // This is to add the current user email at the top and bigger
+                View view0 = getLayoutInflater().inflate(R.layout.email_card, null);
+                TextView textView0 = view0.findViewById(R.id.emailsTextView);
+                textView0.setText(loggedEmail);
+                textView0.setPadding(30,16,0,16);
+                textView0.setTextSize(21);
+
+                LinearLayout.LayoutParams layoutParams0 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                layoutParams0.setMargins(0, 5, 0, 5);
+
+                linearLayout.addView(view0 , layoutParams0);
+
                 for (DataSnapshot snap : snapshot.getChildren()) {
                     //this is why defined another user class. See DataSnapShot documentation
                     User user = snap.getValue(User.class);

@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -43,18 +44,19 @@ public class Main extends AppCompatActivity {
         settings = findViewById(R.id.settingsIcon);
         setAlarm = findViewById(R.id.setNewAlarmIcon);
         buttonsRedirect = findViewById(R.id.to_buttons);
+
         linearLayout = findViewById(R.id.linearLayout);
 
         sharedPreferences = getSharedPreferences("loginDetails", MODE_PRIVATE);
         deviceId = sharedPreferences.getString("deviceId", "defaultStringValue");
 
         alarmsDatabase = FirebaseDatabase.getInstance().getReference("Devices").child(deviceId).child("Alarms");
-
         alarmsDatabase.addValueEventListener(new ValueEventListener() {
 
             //getting alarm data from the firebase and assigning them to array[weekday][nth alarm][alarmTime, message]
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                linearLayout.removeAllViews();
                 int j =0;
                 for (DataSnapshot daySnapshot : snapshot.getChildren()) {
                     String[][] dayAlarmsList = new String[(int) daySnapshot.getChildrenCount()][];
@@ -75,10 +77,10 @@ public class Main extends AppCompatActivity {
                 structuredArr = restructureArray(alarmsArr);
 
                 int time , hh , mm;
-                String amPm , name , daysStr , timeStr;
+                String amPm , description , daysStr , timeStr;
 
                 for (String[][] element : structuredArr){
-                    name = element[1][0];
+                    description = element[1][0];
                     time = Integer.parseInt(element[0][0]);
                     hh = (int) Math.floor((double) time/100);
                     mm = time % 100 ;
@@ -118,13 +120,32 @@ public class Main extends AppCompatActivity {
                     View view = getLayoutInflater().inflate(R.layout.alarm_card, null);
 
                     TextView titleTextView = view.findViewById(R.id.titleTextView);
-                    titleTextView.setText(name);
+                    titleTextView.setText(description);
 
                     TextView timeTextView = view.findViewById(R.id.timeTextView);
                     timeTextView.setText(timeStr);
 
                     TextView daysTextView = view.findViewById(R.id.daysTextView);
                     daysTextView.setText(daysStr);
+
+                    TextView ampmTextView = view.findViewById(R.id.ampmTextView);
+                    ampmTextView.setText(amPm);
+
+                    CardView cardView = view.findViewById(R.id.cardView);
+
+                    String finalDescription = description;
+                    String finalTime = String.valueOf(time);
+                    cardView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(Main.this , AlarmRemove.class);
+                            intent.putExtra("msg", finalDescription);
+                            intent.putExtra("time", finalTime);
+                            intent.putExtra("daysArr", element[2]);
+                            intent.putExtra("deviceId" , deviceId);
+                            startActivity(intent);
+                        }
+                    });
 
                     LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
@@ -136,7 +157,7 @@ public class Main extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(Main.this , "Something went wrong : " + error , Toast.LENGTH_SHORT).show();
+                Toast.makeText(Main.this , "Database Error : " + error , Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -172,7 +193,7 @@ public class Main extends AppCompatActivity {
 
             for (int j =0 ; j < arr[i].length ; j++){
                 tempTime = arr[i][j][0];
-                tempDes = arr[i][j][1];
+                tempDes = arr[i][j][1].trim();
 
                 String[] dayRecorder= {"0", "0", "0", "0","0", "0", "0"};
                 dayRecorder[i] = "1";
@@ -183,10 +204,12 @@ public class Main extends AppCompatActivity {
                     int l = 0;
                     //use k = i+1 also as now we don't have to find matching alarms in the same day
 
+
                     for (int k =i+1  ; k< 7-i ;k++) {
                         while ( l < arr[k].length){
-                            if(tempTime.equals(arr[k][l][0])){
-                                if (tempDes.equals(arr[k][l][1])){
+                            if(tempTime.intern() == arr[k][l][0].intern()){
+                                //There's a bug that prevent below code from passing if condition even though  strings are equal . Usually it happens if the equal key value pair nodes in the firebase are created simultaneously.
+                                if (tempDes.equals(arr[k][l][1].trim()) ){
                                     dayRecorder[k] = "1";
                                     arr[k][l][0] = "0";
                                 }
