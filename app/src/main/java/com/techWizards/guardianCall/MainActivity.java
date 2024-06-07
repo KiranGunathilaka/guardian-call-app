@@ -3,19 +3,11 @@ package com.techWizards.guardianCall;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -88,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         start.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                startService(new Intent(MainActivity.this,MusicService.class));
+                startService(new Intent(MainActivity.this, NotificationService.class));
 
             }
         });
@@ -106,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
         stopService.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                stopService(new Intent(MainActivity.this,MusicService.class));
+                stopService(new Intent(MainActivity.this, NotificationService.class));
             }
         });
 

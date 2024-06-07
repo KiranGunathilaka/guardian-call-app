@@ -19,4 +19,13 @@
     <string name="set_alarm">Set Alarm</string>
     <string name="add_alarm">Add Alarm</string>
     <string name="button_battery_percentage">Button Battery Percentage</string>
+    <string name="Buttons">Buttons</string>
+    <string name="Alarms">Alarms</string>
+    <string name="Button_1">Button 1\n</string>
+    <string name="name">Message</string>
+    <string name="log_out">Log Out</string>
+    <string name="users_registered_for_this_device">Users registered for this device :</string>
+    <string name="remove">Remove</string>
+    <string name="descriptionAlarm">In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before the final copy is available.</string>
+    <string name="device_id">Device ID</string>
 </resources>

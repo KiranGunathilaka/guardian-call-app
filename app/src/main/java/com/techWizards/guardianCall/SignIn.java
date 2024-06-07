@@ -1,6 +1,9 @@
 package com.techWizards.guardianCall;
 
+import static androidx.core.content.SharedPreferencesKt.edit;
+
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
@@ -16,7 +19,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,6 +32,7 @@ public class SignIn extends AppCompatActivity {
     private Button signInButton;
     private TextView registerRedirect;
     private String deviceId;
+    private SharedPreferences loginDetails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +40,7 @@ public class SignIn extends AppCompatActivity {
         setContentView(R.layout.activity_signin);
 
         auth =FirebaseAuth.getInstance();
-        signInEmail = findViewById(R.id.signInEmail);
+        signInEmail = findViewById(R.id.emailsTextView);
         signInPwd = findViewById(R.id.signInPwd);
         signInButton = findViewById(R.id.logInButton);
         registerRedirect = findViewById(R.id.signInRegRedirect);
@@ -62,8 +65,15 @@ public class SignIn extends AppCompatActivity {
                                             public void onDataChange(DataSnapshot snapshot) {
                                                 if(snapshot.exists()){
                                                     deviceId = snapshot.child("deviceId").getValue(String.class);
-                                                    Intent intent = new Intent(SignIn.this, MainActivity.class);
-                                                    intent.putExtra("DeviceID", deviceId);
+
+                                                    loginDetails = getSharedPreferences("loginDetails", MODE_PRIVATE);
+                                                    SharedPreferences.Editor editor = loginDetails.edit();
+                                                    editor.putString("userId", userId);
+                                                    editor.putString("userEmail", email);
+                                                    editor.putString("deviceId", deviceId);
+                                                    editor.apply();
+
+                                                    Intent intent = new Intent(SignIn.this, Main.class);
                                                     startActivity(intent);
                                                     finish();
                                             } else{
