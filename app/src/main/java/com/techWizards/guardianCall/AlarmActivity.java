@@ -1,126 +1,278 @@
 package com.techWizards.guardianCall;
 
-
-import static com.techWizards.guardianCall.MainActivity.deviceId;
-
-import android.annotation.SuppressLint;
-import android.app.AlarmManager;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AlarmActivity extends AppCompatActivity {
-
-    public static String ID = deviceId;
-    private ArrayList<Alarm> alarmList;
+    private String deviceId;
     private AlarmAdapter adapter;
     private int hourOfDay, minute;
-
-    private String message;
+    private String message ;
+    private TextView backIcon;
+    private TextView hh , mm ;
+    private EditText alarmMsg;
+    private Button amPm , saveBtn;
+    private Button[] days ;
+    private boolean isAm;
+    Map<Button, Boolean> dayStatesMap;
 
     private boolean[] daysOfWeek = new boolean[7]; // For Monday to Sunday
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_alarm);
+        setContentView(R.layout.activity_set_alarm);
 
+        SharedPreferences sharedPreferences = getSharedPreferences("loginDetails", MODE_PRIVATE);
+        deviceId = sharedPreferences.getString("deviceId", "defaultStringValue");
 
-        alarmList = new ArrayList<>();
-        adapter = new AlarmAdapter(this, alarmList);
-
-
-
-        ListView alarmListView = findViewById(R.id.alarmListView);
-        alarmListView.setAdapter(adapter);
-
-        Button setAlarmButton = findViewById(R.id.setAlarmButton);
-        setAlarmButton.setOnClickListener(new View.OnClickListener() {
+        backIcon = findViewById(R.id.backIcon);
+        backIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTimePickerDialog();
+                finish();
             }
         });
 
-
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        saveAlarms();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        loadAlarms();
-    }
-
-    private void saveAlarms() {
-        SharedPreferences sharedPreferences = getSharedPreferences("alarms", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        Gson gson = new Gson();
-        String alarmsJson = gson.toJson(alarmList);
-        editor.putString("alarms", alarmsJson);
-        editor.apply();
-    }
-
-    private void loadAlarms() {
-        SharedPreferences sharedPreferences = getSharedPreferences("alarms", MODE_PRIVATE);
-        String alarmsJson = sharedPreferences.getString("alarms", null);
-        if (alarmsJson != null) {
-            Gson gson = new Gson();
-            Type type = new TypeToken<ArrayList<Alarm>>() {}.getType();
-            ArrayList<Alarm> savedAlarms = gson.fromJson(alarmsJson, type);
-            if (savedAlarms != null) {
-                alarmList.clear();
-                alarmList.addAll(savedAlarms);
-                adapter.notifyDataSetChanged();
-            }
-        }
-    }
+        hh = findViewById(R.id.hh);
+        mm = findViewById(R.id.mm);
+        alarmMsg = findViewById(R.id.alarmMsg);
+        amPm = findViewById(R.id.amPm);
+        saveBtn = findViewById(R.id.saveButton);
+        days = new Button[]{
+                findViewById(R.id.sundayBtn),
+                findViewById(R.id.mondayBtn),
+                findViewById(R.id.tuesdayBtn),
+                findViewById(R.id.wednesdayBtn),
+                findViewById(R.id.thursdayBtn),
+                findViewById(R.id.fridayBtn),
+                findViewById(R.id.saturdayBtn),
+        };
 
 
+        //this will make lose focus from hh , mm ediTexts if touch down event occurs outside the text field
+//        View rootView = findViewById(android.R.id.content);
+//        rootView.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//                    View currentFocus = getCurrentFocus();
+//                    if (currentFocus instanceof EditText) {
+//                        Rect outRect = new Rect();
+//                        currentFocus.getGlobalVisibleRect(outRect);
+//                        if (!outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
+//                            if (currentFocus == hh || currentFocus == mm) {
+//                                currentFocus.clearFocus();
+//                                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//                                imm.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
+//                            }
+//                        }
+//                    }
+//                }
+//                return true;
+//            }
+//        });
 
-    private void showTimePickerDialog() {
-        TimePickerFragment newFragment = new TimePickerFragment();
-        newFragment.setOnTimeSetListener(new TimePickerFragment.OnTimeSetListener() {
+        hh.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onTimeSet(int hourOfDay, int minute) {
-                AlarmActivity.this.hourOfDay = hourOfDay;
-                AlarmActivity.this.minute = minute;
-                showDayPickerDialog();
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String input = editable.toString();
+                if (!input.isEmpty()) {
+                    int value = Integer.parseInt(input);
+                    if (value > 13) {
+                        Snackbar.make(hh, "Maximum Hour value is 12", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.RED).show();
+                        hh.setText(null);
+                    }
+                }
             }
         });
-        newFragment.show(getSupportFragmentManager(), "timePicker");
+
+        hh.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+
+                String text = hh.getText().toString();
+                int num;
+                if (!text.equals("")){
+                    num = Integer.parseInt(text);
+                    if (!hasFocus &&  num< 10 ) {
+                        hh.setText("0" + text);
+                    }else if(hasFocus){
+                        hh.setText(null);
+                    }
+
+//                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                }
+            }
+        });
+
+        mm.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String input = editable.toString();
+                if (!input.isEmpty()) {
+                    int value = Integer.parseInt(input);
+                    if (value > 59) {
+                        Snackbar.make(mm, "Maximum Minute value is 59", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.RED).show();
+                        mm.setText(null);
+                    }
+                }
+            }
+        });
+
+        mm.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                String text = mm.getText().toString();
+                int num;
+                if (!text.equals("")){
+                    num = Integer.parseInt(text);
+                    if (!hasFocus &&  num< 10 ) {
+                        mm.setText("0" + text);
+                    }else if(hasFocus){
+                        mm.setText(null);
+                    }
+                }
+
+            }
+        });
+
+
+
+        isAm = true;
+        amPm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isAm){
+                    isAm = false;
+                    amPm.setText("pm");
+                }else{
+                    isAm = true;
+                    amPm.setText("am");
+                }
+            }
+        });
+
+        dayStatesMap = new HashMap<>();
+        for (Button day : days) {
+            dayStatesMap.put(day, false);
+        }
+
+        for (Button day : days) {
+            day.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    boolean currentState = dayStatesMap.get(day);
+                    dayStatesMap.put(day, !currentState);
+
+                    if (!currentState) {
+                        day.setBackgroundResource(R.drawable.textbox_border_rounded_selected);
+                    } else {
+                        day.setBackgroundResource(R.drawable.text_box_border_rounded);
+                    }
+                }
+            });
+        }
+
+        saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String hour = hh.getText().toString().trim();
+                String minute = mm.getText().toString().trim();
+                String message = alarmMsg.getText().toString().trim();
+
+                if (!hour.isEmpty() && !minute.isEmpty() && !message.isEmpty()){
+                    int H = Integer.parseInt(hour);
+                    if (!isAm){
+                        H +=12;
+                    }
+
+                    String time = H + minute;
+                    System.out.println(time);
+                    System.out.println(message);
+
+                    DatabaseReference alarmDatabase = FirebaseDatabase.getInstance().getReference("Devices").child(deviceId).child("Alarms");
+                    int i =0;
+                    Map <String, Object> alarms = new HashMap<>();
+                    for (Button btn: days){
+                        if( dayStatesMap.get(btn)){
+                            String key = i + "/" + time;
+                            alarms.put(key , message);
+                        }
+                        i++;
+                    }
+
+                    alarmDatabase.updateChildren(alarms)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    // Update was successful
+                                    Toast.makeText(AlarmActivity.this , "Alarm set successful", Toast.LENGTH_SHORT).show();
+                                    Log.d("Firebase", "Data written successfully.");
+                                    finish();
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    // Update failed
+                                    Toast.makeText(AlarmActivity.this , "Databse error : " + e , Toast.LENGTH_SHORT).show();
+                                    Log.d("Firebase", "Data write failed.", e);
+                                }
+                            });
+
+
+                }else{
+
+                }
+
+            }
+        });
+
     }
+
+
 
     private void showDayPickerDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -196,7 +348,7 @@ public class AlarmActivity extends AppCompatActivity {
                 int requestCode = (int) System.currentTimeMillis() + i;
 
                 Alarm alarm = new Alarm(hourOfDay, minute, i, requestCode,message);
-                alarmList.add(alarm);
+                //alarmList.add(alarm);
                 adapter.notifyDataSetChanged();
             }
         }
@@ -214,10 +366,10 @@ public class AlarmActivity extends AppCompatActivity {
         }else{
             path = String.valueOf(alarm.getMinute());
         }
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Devices").child(ID).child("Alarms").child(String.valueOf(alarm.getDayOfWeek()));
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Devices").child(deviceId).child("Alarms").child(String.valueOf(alarm.getDayOfWeek()));
         reference.child(String.valueOf(alarm.getHourOfDay()) +path).removeValue();
 
-        alarmList.remove(alarm);
+        //alarmList.remove(alarm);
         adapter.notifyDataSetChanged();
         Toast.makeText(this, "Alarm Canceled", Toast.LENGTH_SHORT).show();
     }
@@ -253,7 +405,7 @@ public class AlarmActivity extends AppCompatActivity {
                 path = String.valueOf(alarm.getMinute());
             }
 
-            DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Devices").child(ID).child("Alarms").child(String.valueOf(alarm.getDayOfWeek()));
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Devices").child(deviceId).child("Alarms").child(String.valueOf(alarm.getDayOfWeek()));
             reference.child(String.valueOf(alarm.getHourOfDay()) +path).setValue(alarm.getMessage());
 
             deleteAlarmButton.setOnClickListener(new View.OnClickListener() {

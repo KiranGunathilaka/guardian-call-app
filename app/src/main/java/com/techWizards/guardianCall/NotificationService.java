@@ -26,6 +26,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 
@@ -58,7 +59,7 @@ public class NotificationService extends Service {
         SharedPreferences sharedPreferences = getSharedPreferences("loginDetails", MODE_PRIVATE);
         deviceId = sharedPreferences.getString("deviceId", "defaultStringValue");
 
-        mp = MediaPlayer.create(this, Settings.System.DEFAULT_RINGTONE_URI);
+
 
         buttonsDatabase = FirebaseDatabase.getInstance().getReference().child("Devices").child(deviceId).child("Buttons");
 
@@ -77,9 +78,16 @@ public class NotificationService extends Service {
                 btnArr = new String[activatedBtnArr.size()];
                 btnArr = activatedBtnArr.toArray(btnArr);
 
-                if (!activatedBtnArr.isEmpty()){
+                if (activatedBtnArr.size() > 0){ //bug fix
+                    if (mp != null){  // if not, multiple instances of mp will run and same ringintone will be heard twice.
+                        mp.stop();
+                        mp.release();
+                        mp = null ;
+                    }
+                    mp = MediaPlayer.create(NotificationService.this, Settings.System.DEFAULT_RINGTONE_URI);
                     mp.setLooping(true);
                     mp.start();
+
                     showPopupNotification(btnArr);
                 }
 
@@ -112,15 +120,6 @@ public class NotificationService extends Service {
         return START_STICKY;
     }
 
-//    @Override
-//    public void onDestroy() {
-//        if (mp != null) {
-//            mp.stop();
-//            mp.release();
-//            mp = null;
-//        }
-//        super.onDestroy();
-//    }
 
     private void createNotificationChannels() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -143,15 +142,26 @@ public class NotificationService extends Service {
         }
     }
 
-    private void showPopupNotification(String[] btnArr) {
-        Intent popupIntent = new Intent(this, BtnNotifyActivity.class);
-        popupIntent.putExtra("Buttons", btnArr);
-        popupIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    private static int requestCode = 0; //requestCode have to be changed, other wise this pending intents will be cached and won't update.
 
-        String contentText= "";
+    private void showPopupNotification(String[] btnArr) {
+        Intent popupIntent = new Intent(NotificationService.this, BtnNotifyActivity.class);
+        popupIntent.putExtra("Buttons", btnArr);
+        PendingIntent popupPendingIntent = PendingIntent.getActivity(this, requestCode++, popupIntent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+
+        SharedPreferences buttonNames = getSharedPreferences("ButtonNames", MODE_PRIVATE);
+
+
+        StringBuilder contentTextBuilder = new StringBuilder();
         for (String i: btnArr){
-            contentText += i + " ";
+            i = buttonNames.getString(i, i);
+            contentTextBuilder.append(i).append(", ");
         }
+        if (contentTextBuilder.length() > 0) {// Removed the last comma and space if the string is not empty
+            contentTextBuilder.setLength(contentTextBuilder.length() - 2);
+        }
+        String contentText = contentTextBuilder.toString();
+
 
         if (btnArr.length>1){
             contentText += " are having an Emergency";
@@ -165,7 +175,7 @@ public class NotificationService extends Service {
                 .setContentTitle("Guardian Call Emergency Alert")
                 .setContentText(contentText)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setFullScreenIntent(PendingIntent.getActivity(this, 0, popupIntent, PendingIntent.FLAG_IMMUTABLE), true)
+                .setContentIntent(popupPendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setSound(null)
                 .setVibrate(notificationReceivedPattern);

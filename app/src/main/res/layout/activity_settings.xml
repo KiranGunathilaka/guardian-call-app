@@ -107,6 +107,8 @@
             android:maxHeight="100dp"
             android:text="@string/log_out"
             android:textColor="#FFFFFF"
+            android:fontFamily="@font/monospace"
+            android:textStyle="bold"
             app:autoSizeMaxTextSize="24sp"
             app:autoSizeMinTextSize="12sp"
             app:autoSizeStepGranularity="2sp"

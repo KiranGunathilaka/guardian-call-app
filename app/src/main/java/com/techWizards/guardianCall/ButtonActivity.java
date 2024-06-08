@@ -1,9 +1,14 @@
 package com.techWizards.guardianCall;
 
-import static com.techWizards.guardianCall.MainActivity.deviceId;
-
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.view.KeyEvent;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,40 +21,90 @@ import com.google.firebase.database.ValueEventListener;
 
 public class ButtonActivity extends AppCompatActivity {
 
-    private DatabaseReference mDatabase;
-
-    private TextView percentage;
+    private DatabaseReference devicesDatabase;
+    private String deviceId;
+    private Button backButton;
+    private LinearLayout linearLayout;
+    private SharedPreferences sharedPreferences , buttonNames;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_button);
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        backButton = findViewById(R.id.back_to_alarms);
+        linearLayout = findViewById(R.id.linearLayout);
 
-        // Reference to your data in Firebase
-        DatabaseReference myDataRef = mDatabase.child("Devices").child(deviceId).child("Buttons").child("1").child("Battery");;
+        sharedPreferences = getSharedPreferences("loginDetails", MODE_PRIVATE);
+        deviceId = sharedPreferences.getString("deviceId", "defaultStringValue");
 
-        percentage = findViewById(R.id.percentage);
+        devicesDatabase = FirebaseDatabase.getInstance().getReference("Devices").child(deviceId).child("Buttons");
 
-        // Read data from Firebase
-        myDataRef.addValueEventListener(new ValueEventListener() {
+        devicesDatabase.addValueEventListener(new ValueEventListener() {
+            String btnId , batteryPerc , realName;
+            Double battery;
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // Get the value from Firebase
-                float firebaseData = dataSnapshot.getValue(float.class);
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                linearLayout.removeAllViews();
 
-                double num = 123 - 123/Math.pow((1+Math.pow((firebaseData/3.7),80)),0.165);
+                buttonNames = getSharedPreferences("ButtonNames", MODE_PRIVATE);
+                SharedPreferences.Editor editor = buttonNames.edit();
 
-                int num_int = (int) num;
+                for (DataSnapshot btn : snapshot.getChildren()){
+                    View view = getLayoutInflater().inflate(R.layout.button_card, null);
 
-                // Set the value to EditText
-                percentage.setText("Button Battery Percentage : " + String.valueOf(num_int));
+                    btnId = String.valueOf(btn.getKey());
+                    realName = buttonNames.getString(btnId, btnId ); //if there's no string under btnId in preferences, default string will be btnId too
+                    EditText btnName = view.findViewById(R.id.name);
+                    btnName.setHint(realName);
+                    btnName.setId(Integer.parseInt(btnId));
+
+                    btnName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                        @Override
+                        public void onFocusChange(View v, boolean hasFocus) {
+                            String temp = btnName.getText().toString().trim();
+                            if (!hasFocus && !temp.isEmpty()) {
+                                editor.putString(String.valueOf(btnName.getId()), temp);
+                                editor.apply();
+                                btnName.setText(null);
+                                btnName.setHint(temp);
+                            }
+                        }
+                    });
+
+                    btnName.setOnKeyListener(new View.OnKeyListener() {
+                        @Override
+                        public boolean onKey(View v, int keyCode, KeyEvent event) {
+                            if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                                btnName.clearFocus();
+                                return true;
+                            }
+                            return false;
+                        }
+                    });
+
+                    battery = Double.parseDouble(btn.child("Battery").getValue().toString());
+                    batteryPerc = String.valueOf(Math.floor((battery -3.2) * 100)) + "%"; // This is calculated by considering the max and min voltages of the battery as 4.2V and 3.2V
+                    TextView strBattery = view.findViewById(R.id.batteryPercentage);
+                    strBattery.setText(batteryPerc);
+
+                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    layoutParams.setMargins(0, 10, 0, 10);
+
+                    linearLayout.addView(view, layoutParams);
+                }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle potential errors
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
     }
