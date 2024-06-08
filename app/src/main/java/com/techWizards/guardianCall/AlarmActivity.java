@@ -1,7 +1,6 @@
 package com.techWizards.guardianCall;
 
 
-import static com.techWizards.guardianCall.MainActivity.deviceId;
 
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
@@ -36,18 +35,20 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class AlarmActivity extends AppCompatActivity {
-
-    public static String ID = deviceId;
+    private String deviceId = "100001";
+    public static String ID = "100001";
     private ArrayList<Alarm> alarmList;
     private AlarmAdapter adapter;
     private int hourOfDay, minute;
 
-    private String message;
+    private String message ;
 
     private boolean[] daysOfWeek = new boolean[7]; // For Monday to Sunday
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm);
 
