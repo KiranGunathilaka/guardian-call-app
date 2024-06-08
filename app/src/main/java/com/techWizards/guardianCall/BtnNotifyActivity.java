@@ -38,7 +38,7 @@ public class BtnNotifyActivity extends AppCompatActivity {
         for (String str: arr){
             View view = getLayoutInflater().inflate(R.layout.btn_name_card, null);
 
-            String temp = i + ". "+ sharedPreferences.getString(str, str);
+            String temp =  sharedPreferences.getString(str, str);
             TextView txtVw = view.findViewById(R.id.buttonName);
             txtVw.setText(temp);
 

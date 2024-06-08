@@ -63,8 +63,6 @@ public class NotificationService extends Service {
 
         buttonsDatabase = FirebaseDatabase.getInstance().getReference().child("Devices").child(deviceId).child("Buttons");
 
-        //referenceAlarm = FirebaseDatabase.getInstance().getReference().child("Devices").child(deviceId).child("Alarms");
-
 
         buttonsDatabase.addValueEventListener(new ValueEventListener() {
             @Override
