@@ -116,6 +116,8 @@ public class Settings extends AppCompatActivity {
                 editor.clear();
                 editor.apply();
 
+                stopService(new Intent(Settings.this , NotificationService.class));
+
                 Intent intent = new Intent(Settings.this, SignIn.class);
                 // Setting flags to clear the current task and start a new task with SignIn as the root
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
