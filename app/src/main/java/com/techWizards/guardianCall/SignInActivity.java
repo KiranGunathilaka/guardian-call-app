@@ -1,7 +1,5 @@
 package com.techWizards.guardianCall;
 
-import static androidx.core.content.SharedPreferencesKt.edit;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -25,7 +23,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class SignIn extends AppCompatActivity {
+public class SignInActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
     private EditText signInEmail, signInPwd;
@@ -56,7 +54,7 @@ public class SignIn extends AppCompatActivity {
                         auth.signInWithEmailAndPassword(email, pass).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                                     @Override
                                     public void onSuccess(AuthResult authResult) {
-                                        Toast.makeText(SignIn.this, "Login Successful", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(SignInActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
 
                                         String userId = authResult.getUser().getUid();
                                         DatabaseReference usersDatabase = FirebaseDatabase.getInstance().getReference("Users");
@@ -73,17 +71,17 @@ public class SignIn extends AppCompatActivity {
                                                     editor.putString("deviceId", deviceId);
                                                     editor.apply();
 
-                                                    Intent intent = new Intent(SignIn.this, Main.class);
+                                                    Intent intent = new Intent(SignInActivity.this, MainActivity.class);
                                                     startActivity(intent);
                                                     finish();
                                             } else{
-                                                    Toast.makeText(SignIn.this, "Something went wrong. Contact customer Service" , Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(SignInActivity.this, "Something went wrong. Contact customer Service" , Toast.LENGTH_SHORT).show();
                                                 }
                                             }
 
                                             @Override
                                             public void onCancelled(@NonNull DatabaseError error) {
-                                                Toast.makeText(SignIn.this, "Database error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(SignInActivity.this, "Database error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                                             }
                                         });
 
@@ -92,7 +90,7 @@ public class SignIn extends AppCompatActivity {
                                 }).addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(SignIn.this, "Login Failed. Check your credentials", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(SignInActivity.this, "Login Failed. Check your credentials", Toast.LENGTH_SHORT).show();
                                     }
                                 });
                     } else {
@@ -109,7 +107,7 @@ public class SignIn extends AppCompatActivity {
         registerRedirect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SignIn.this, Register.class);
+                Intent intent = new Intent(SignInActivity.this, RegisterActivity.class);
                 startActivity(intent);
             }
         });

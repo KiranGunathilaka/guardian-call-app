@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Settings"
+    tools:context=".SettingsActivity"
     android:background="@drawable/gradient"
     android:fillViewport="true">
 
@@ -68,7 +68,8 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/dotdot"
                 app:layout_constraintStart_toStartOf="@id/guideline_left"
-                android:maxLength="2"/>
+                android:maxLength="2"
+                android:nextFocusDown="@id/mm"/>
 
             <TextView
                 android:id="@+id/dotdot"
@@ -102,7 +103,10 @@
                 android:fontFamily="@font/monospace"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toEndOf="@id/dotdot"
-                app:layout_constraintEnd_toStartOf="@id/amPm" />
+                app:layout_constraintEnd_toStartOf="@id/amPm"
+                android:nextFocusDown="@id/alarmMsg"
+
+                />
 
             <Button
                 android:id="@+id/amPm"
@@ -313,7 +317,9 @@
             app:layout_constraintTop_toBottomOf="@id/registeredUsersPrompt"
             app:layout_constraintStart_toStartOf="@id/guideline_left"
             app:layout_constraintEnd_toEndOf="@id/guideline_right"
-            app:layout_constraintWidth_max="450dp" />
+            app:layout_constraintWidth_max="450dp"
+            android:nextFocusDown="@id/saveButton"
+            android:imeOptions = "actionNext"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

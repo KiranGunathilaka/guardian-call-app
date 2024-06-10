@@ -4,10 +4,8 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Build;
@@ -26,7 +24,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 
@@ -62,8 +59,6 @@ public class NotificationService extends Service {
 
 
         buttonsDatabase = FirebaseDatabase.getInstance().getReference().child("Devices").child(deviceId).child("Buttons");
-
-        //referenceAlarm = FirebaseDatabase.getInstance().getReference().child("Devices").child(deviceId).child("Alarms");
 
 
         buttonsDatabase.addValueEventListener(new ValueEventListener() {
@@ -103,7 +98,7 @@ public class NotificationService extends Service {
 
         long[] enablingServicePattern = {0, 500, 200, 300};
 
-        Intent notificationIntent = new Intent(this, Main.class);
+        Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
