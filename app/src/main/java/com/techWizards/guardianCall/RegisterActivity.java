@@ -67,8 +67,12 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
+
                 String userName = email.getText().toString().trim();
-                checkUsernameExists(userName);
+                if (!userName.isEmpty()){
+                    checkUsernameExists(userName);
+                }
+
             }
         });
 
@@ -83,12 +87,14 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (pwd.getText().toString().trim().equals(confirmPwd.getText().toString().trim())){
-                    Snackbar.make(confirmPwd, "Password confirmed", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.GREEN).show();
-                    passwordsMatch = true;
-                } else {
-                    Snackbar.make(confirmPwd, "Passwords do not match", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.RED).show();
-                    passwordsMatch = false;
+                if (!pwd.getText().toString().trim().isEmpty()) {
+                    if (pwd.getText().toString().trim().equals(confirmPwd.getText().toString().trim())) {
+                        Snackbar.make(confirmPwd, "Password confirmed", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.GREEN).show();
+                        passwordsMatch = true;
+                    } else {
+                        Snackbar.make(confirmPwd, "Passwords do not match", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.RED).show();
+                        passwordsMatch = false;
+                    }
                 }
             }
         });

@@ -1,12 +1,15 @@
 package com.techWizards.guardianCall;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -144,6 +147,21 @@ public class SetAlarmActivity extends AppCompatActivity {
                     }
                 }
 
+            }
+        });
+
+        alarmMsg.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                    // Move focus to the next component
+                    View nextComponent = findViewById(R.id.saveButton);
+                    if (nextComponent != null) {
+                        nextComponent.requestFocus();
+                    }
+                    return true;
+                }
+                return false;
             }
         });
 
