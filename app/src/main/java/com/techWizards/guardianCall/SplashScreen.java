@@ -29,11 +29,11 @@ public class SplashScreen extends AppCompatActivity {
             @Override
             public void run() {
                 if (sharedPreferences.contains("userEmail") && sharedPreferences.contains("deviceId")) {
-                    Intent intent = new Intent(SplashScreen.this, Main.class);
+                    Intent intent = new Intent(SplashScreen.this, MainActivity.class);
                     startActivity(intent);
                     finish();
                 } else {
-                    Intent intent = new Intent(SplashScreen.this, SignIn.class);
+                    Intent intent = new Intent(SplashScreen.this, SignInActivity.class);
                     startActivity(intent);
                     finish();
                 }

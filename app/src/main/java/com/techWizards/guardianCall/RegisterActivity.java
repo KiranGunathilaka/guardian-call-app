@@ -28,7 +28,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-public class Register extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private DatabaseReference usersDatabase, devicesDatabase;
     private EditText email , pwd , confirmPwd , devId , secKey;
@@ -140,12 +140,12 @@ public class Register extends AppCompatActivity {
                                             usersDatabase.child(userId).child("email").setValue(user);
                                             usersDatabase.child(userId).child("deviceId").setValue(deviceId);
 
-                                            Toast.makeText(Register.this, "Successfully Registered", Toast.LENGTH_SHORT).show();
-                                            startActivity(new Intent(Register.this, SignIn.class));
+                                            Toast.makeText(RegisterActivity.this, "Successfully Registered", Toast.LENGTH_SHORT).show();
+                                            startActivity(new Intent(RegisterActivity.this, SignInActivity.class));
                                             finish();
                                         } else {
                                             String errorMessage = task.getException() != null ? task.getException().getMessage() : "Unknown error";
-                                            Toast.makeText(Register.this, "Registering Failed, " + errorMessage, Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(RegisterActivity.this, "Registering Failed, " + errorMessage, Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 });
@@ -183,7 +183,7 @@ public class Register extends AppCompatActivity {
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
                     // Handle possible errors.
-                    Toast.makeText(Register.this, "Database error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, "Database error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
         }else{
@@ -209,7 +209,7 @@ public class Register extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 // Handle possible errors.
-                Toast.makeText(Register.this, "Database error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(RegisterActivity.this, "Database error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
         return deviceIdExists;
@@ -228,18 +228,18 @@ public class Register extends AppCompatActivity {
                     boolean isMatched = databaseKey.equals(key);
                     callback.onKeyMatch(isMatched);
                     if (!isMatched) {
-                        Toast.makeText(Register.this, "Incorrect Device ID or Secret Key", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegisterActivity.this, "Incorrect Device ID or Secret Key", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     callback.onKeyMatch(false);
-                    Toast.makeText(Register.this, "Incorrect Device ID or Secret Key", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, "Incorrect Device ID or Secret Key", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 callback.onKeyMatch(false);
-                Toast.makeText(Register.this, "Database error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(RegisterActivity.this, "Database error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

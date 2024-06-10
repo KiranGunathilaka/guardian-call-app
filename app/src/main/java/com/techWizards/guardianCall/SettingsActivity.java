@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -21,9 +20,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-
-public class Settings extends AppCompatActivity {
+public class SettingsActivity extends AppCompatActivity {
 
     private String deviceId, loggedEmail;
     private DatabaseReference usersDatabase;
@@ -96,7 +93,7 @@ public class Settings extends AppCompatActivity {
 
             public void onCancelled(DatabaseError databaseError) {
                 // Handle possible errors
-                Toast.makeText(Settings.this, "User loading failed : " + databaseError, Toast.LENGTH_SHORT).show();
+                Toast.makeText(SettingsActivity.this, "User loading failed : " + databaseError, Toast.LENGTH_SHORT).show();
                 Log.w("FirebaseQuery", "loadPost:onCancelled", databaseError.toException());
             }
         });
@@ -116,10 +113,10 @@ public class Settings extends AppCompatActivity {
                 editor.clear();
                 editor.apply();
 
-                stopService(new Intent(Settings.this , NotificationService.class));
+                stopService(new Intent(SettingsActivity.this , NotificationService.class));
 
-                Intent intent = new Intent(Settings.this, SignIn.class);
-                // Setting flags to clear the current task and start a new task with SignIn as the root
+                Intent intent = new Intent(SettingsActivity.this, SignInActivity.class);
+                // Setting flags to clear the current task and start a new task with SignInActivity as the root
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 finish();

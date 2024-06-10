@@ -21,7 +21,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class Main extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
     private String deviceId;
     private DatabaseReference alarmsDatabase;
@@ -48,7 +48,7 @@ public class Main extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("loginDetails", MODE_PRIVATE);
         deviceId = sharedPreferences.getString("deviceId", "defaultStringValue");
 
-        startService(new Intent(Main.this, NotificationService.class));
+        startService(new Intent(MainActivity.this, NotificationService.class));
 
         alarmsDatabase = FirebaseDatabase.getInstance().getReference("Devices").child(deviceId).child("Alarms");
         alarmsDatabase.addValueEventListener(new ValueEventListener() {
@@ -114,6 +114,9 @@ public class Main extends AppCompatActivity {
                         if (d.equals("1")){
                             daysStr += weekdaysArr[i]+" ";
                         }
+                        if (daysStr.equals("Sun Mon Tue Wed Thu Fri Sat ")){
+                            daysStr = "Everyday";
+                        }
                         i++;
                     }
 
@@ -134,13 +137,15 @@ public class Main extends AppCompatActivity {
                     CardView cardView = view.findViewById(R.id.cardView);
 
                     String finalDescription = description;
-                    String finalTime = String.valueOf(time);
+                    String finalTime = String.valueOf(hh + MM);
+                    String finalAmPm = amPm;
                     cardView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent = new Intent(Main.this , AlarmRemove.class);
+                            Intent intent = new Intent(MainActivity.this , AlarmRemoveActivity.class);
                             intent.putExtra("msg", finalDescription);
                             intent.putExtra("time", finalTime);
+                            intent.putExtra("amPm", finalAmPm);
                             intent.putExtra("daysArr", element[2]);
                             intent.putExtra("deviceId" , deviceId);
                             startActivity(intent);
@@ -157,14 +162,14 @@ public class Main extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(Main.this , "Database Error : " + error , Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this , "Database Error : " + error , Toast.LENGTH_SHORT).show();
             }
         });
 
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Main.this, Settings.class);
+                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivity(intent);
             }
         });
@@ -172,7 +177,7 @@ public class Main extends AppCompatActivity {
         buttonsRedirect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Main.this, ButtonActivity.class);
+                Intent intent = new Intent(MainActivity.this, ButtonActivity.class);
                 startActivity(intent);
             }
         });
@@ -180,7 +185,7 @@ public class Main extends AppCompatActivity {
         setAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Main.this, AlarmActivity.class);
+                Intent intent = new Intent(MainActivity.this, SetAlarmActivity.class);
                 startActivity(intent);
             }
         });
@@ -198,7 +203,7 @@ public class Main extends AppCompatActivity {
                 String[] dayRecorder= {"0", "0", "0", "0","0", "0", "0"};
                 dayRecorder[i] = "1";
 
-                if (tempTime != "0"){
+                if (tempTime != "0" && !tempDes.equals("")){
                     // int l = j; when setting alarms, don't let user to set two alarms at same day, same time
                     //even though app doesn't get affected, IoT device may have errors
                     int l = 0;
@@ -223,14 +228,6 @@ public class Main extends AppCompatActivity {
                 }
             }
         }
-
-//        for (String[][] e : list){
-//            System.out.print(e[0][0] + "  "+ e[1][0] + " ---  ");
-//            for ( String f: e[2]){
-//                System.out.print(f + " ");
-//            }
-//            System.out.println("");
-//        }
 
         return list;
     }

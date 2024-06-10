@@ -28,23 +28,23 @@
             android:name=".ButtonActivity"
             android:exported="false" />
         <activity
-            android:name=".Main"
+            android:name=".MainActivity"
             android:exported="true" />
         <activity
-            android:name=".Register"
+            android:name=".RegisterActivity"
             android:exported="true" />
         <activity
-            android:name=".AlarmActivity"
+            android:name=".SetAlarmActivity"
             android:exported="true" />
         <activity
-            android:name=".Settings"
+            android:name=".SettingsActivity"
             android:exported="true" />
         <activity
-            android:name=".SignIn"
+            android:name=".SignInActivity"
             android:exported="true">
         </activity>
         <activity
-            android:name=".AlarmRemove"
+            android:name=".AlarmRemoveActivity"
             android:exported = "true">
         </activity>
         <activity

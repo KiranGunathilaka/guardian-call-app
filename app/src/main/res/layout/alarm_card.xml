@@ -60,15 +60,18 @@
 
         <TextView
             android:id="@+id/daysTextView"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Mon, Tue, Wed"
             android:layout_marginTop="15dp"
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:textColor="#FFFFFF"
-            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="15dp"
+            android:gravity="end"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/titleTextView"
+            app:layout_constraintStart_toEndOf="@id/ampmTextView"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
         <Switch
