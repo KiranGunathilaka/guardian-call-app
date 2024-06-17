@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -68,6 +70,7 @@ public class ButtonActivity extends AppCompatActivity {
                                 editor.apply();
                                 btnName.setText(null);
                                 btnName.setHint(temp);
+                                btnName.setNextFocusDownId(R.id.back_to_alarms);
                             }
                         }
                     });

@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.widget.Toast;
@@ -67,7 +68,13 @@ public class NotificationService extends Service {
                 ArrayList<String> activatedBtnArr = new ArrayList<>();
                 for (DataSnapshot btn : snapshot.getChildren()){
                         if (btn.child("Status").getValue(Integer.class) == 1){
-                            activatedBtnArr.add(btn.getKey());
+                            String btnID = btn.getKey().toString();
+                            activatedBtnArr.add(btnID);
+
+                            // Delaying setting the node back to 0, so other users can detect
+                            new Handler().postDelayed(() -> {
+                                buttonsDatabase.child(btnID).child("Status").setValue(0);
+                            }, 5000);
                         }
                 }
                 btnArr = new String[activatedBtnArr.size()];
@@ -142,6 +149,7 @@ public class NotificationService extends Service {
     private void showPopupNotification(String[] btnArr) {
         Intent popupIntent = new Intent(NotificationService.this, BtnNotifyActivity.class);
         popupIntent.putExtra("Buttons", btnArr);
+        popupIntent.putExtra("notificationId" , 2);
         PendingIntent popupPendingIntent = PendingIntent.getActivity(this, requestCode++, popupIntent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
 
         SharedPreferences buttonNames = getSharedPreferences("ButtonNames", MODE_PRIVATE);
@@ -173,6 +181,7 @@ public class NotificationService extends Service {
                 .setContentIntent(popupPendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setSound(null)
+                .setOngoing(true)
                 .setVibrate(notificationReceivedPattern);
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

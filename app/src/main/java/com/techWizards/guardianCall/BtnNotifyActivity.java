@@ -1,5 +1,7 @@
 package com.techWizards.guardianCall;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -57,6 +59,17 @@ public class BtnNotifyActivity extends AppCompatActivity {
                     NotificationService.mp.stop();
                     NotificationService.mp.release();
                     NotificationService.mp = null;
+                }
+
+
+                NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+                Intent intent = getIntent();
+                int notificationId = intent.getIntExtra("notificationId", -1);
+                System.out.println(notificationId);
+
+                if (notificationId != -1) {
+                    notificationManager.cancel(notificationId);
                 }
 
                 finish();
