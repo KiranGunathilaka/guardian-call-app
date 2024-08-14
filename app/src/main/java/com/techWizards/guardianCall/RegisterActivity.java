@@ -146,9 +146,27 @@ public class RegisterActivity extends AppCompatActivity {
                                             usersDatabase.child(userId).child("email").setValue(user);
                                             usersDatabase.child(userId).child("deviceId").setValue(deviceId);
 
-                                            Toast.makeText(RegisterActivity.this, "Successfully Registered", Toast.LENGTH_SHORT).show();
-                                            startActivity(new Intent(RegisterActivity.this, SignInActivity.class));
-                                            finish();
+                                            devicesDatabase.child(deviceId).child("Alarms").addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                    if (!snapshot.exists()){
+                                                        for(int i=0; i<7; i++){
+                                                            devicesDatabase.child(deviceId).child("Alarms").child(String.valueOf(i)).child("0").setValue("");
+                                                        }
+                                                        String firstBtnID = deviceId+"01";
+                                                        devicesDatabase.child(deviceId).child("Buttons").child(firstBtnID).child("Status").setValue(0);
+                                                        devicesDatabase.child(deviceId).child("Buttons").child(firstBtnID).child("Battery").setValue(0);
+
+                                                    }
+                                                    Toast.makeText(RegisterActivity.this, "Successfully Registered", Toast.LENGTH_SHORT).show();
+                                                    startActivity(new Intent(RegisterActivity.this, SignInActivity.class));
+                                                    finish();
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+                                                }
+                                            });
                                         } else {
                                             String errorMessage = task.getException() != null ? task.getException().getMessage() : "Unknown error";
                                             Toast.makeText(RegisterActivity.this, "Registering Failed, " + errorMessage, Toast.LENGTH_SHORT).show();

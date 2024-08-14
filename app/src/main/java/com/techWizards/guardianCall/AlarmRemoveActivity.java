@@ -59,7 +59,8 @@ public class AlarmRemoveActivity extends AppCompatActivity {
         removeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final boolean[] success = {false};
+                final int totalDeletions = countOnes(arr);
+                final int[] performedDeletions = {0};
                 for (int i =0 ; i<7 ; i++) {
                     if (arr[i].equals("1")) {
                         int finalI = i;
@@ -69,26 +70,34 @@ public class AlarmRemoveActivity extends AppCompatActivity {
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
-                                        success[0] = true;
+                                        performedDeletions[0]++;
+                                        if (totalDeletions == performedDeletions[0]){
+                                            Toast.makeText(AlarmRemoveActivity.this, "Alarm deleted", Toast.LENGTH_SHORT).show();
+                                            finish();
+                                        }
                                     }
                                 })
                                 .addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        success[0] = false;
+                                        Toast.makeText(AlarmRemoveActivity.this, "Failed to delete Alarm", Toast.LENGTH_SHORT).show();
                                     }
                                 });
 
-                        if (success[0]){
-                            Toast.makeText(AlarmRemoveActivity.this, "Alarm deleted", Toast.LENGTH_SHORT).show();
-                            finish();
-                        }else{
-                            Toast.makeText(AlarmRemoveActivity.this, "Failed to delete Alarm", Toast.LENGTH_SHORT).show();
-                        }
                     }
                 }
             }
         });
+    }
+
+    public static int countOnes(String[] array) {
+        int count = 0;
+        for (String num : array) {
+            if (num.equals("1")) {
+                count++;
+            }
+        }
+        return count;
     }
 }
 

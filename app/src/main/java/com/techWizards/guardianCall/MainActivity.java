@@ -209,8 +209,8 @@ public class MainActivity extends AppCompatActivity {
                     int l = 0;
                     //use k = i+1 also as now we don't have to find matching alarms in the same day
 
-
                     for (int k =i+1  ; k< 7-i ;k++) {
+
                         while ( l < arr[k].length){
                             if(tempTime.intern() == arr[k][l][0].intern()){
                                 //There's a bug that prevent below code from passing if condition even though  strings are equal . Usually it happens if the equal key value pair nodes in the firebase are created simultaneously.

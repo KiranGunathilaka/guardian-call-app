@@ -67,8 +67,15 @@ public class NotificationService extends Service {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ArrayList<String> activatedBtnArr = new ArrayList<>();
                 for (DataSnapshot btn : snapshot.getChildren()){
+
+                    String btnID = btn.getKey().toString();
+                    //this will remove if the corrupted button id is fed to the database if the espNow packets are corrupted
+                    if(Integer.parseInt(btnID)/100 != Integer.parseInt(deviceId) ){
+                        FirebaseDatabase.getInstance().getReference("Devices").child(deviceId).child("Buttons").child(btnID).removeValue();
+                        continue;
+                    }
                         if (btn.child("Status").getValue(Integer.class) == 1){
-                            String btnID = btn.getKey().toString();
+
                             activatedBtnArr.add(btnID);
 
                             // Delaying setting the node back to 0, so other users can detect

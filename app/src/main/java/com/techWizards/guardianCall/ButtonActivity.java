@@ -56,6 +56,14 @@ public class ButtonActivity extends AppCompatActivity {
                     View view = getLayoutInflater().inflate(R.layout.button_card, null);
 
                     btnId = String.valueOf(btn.getKey());
+
+                    //this will remove if the corrupted button id is fed to the database if the espNow packets are corrupted
+                    //this is automatically deleted by the notification service, just in case
+                    if(Integer.parseInt(btnId)/100 != Integer.parseInt(deviceId) ){
+                        FirebaseDatabase.getInstance().getReference("Devices").child(deviceId).child("Buttons").child(btnId).removeValue();
+                        continue;
+                    }
+
                     realName = buttonNames.getString(btnId, btnId ); //if there's no string under btnId in preferences, default string will be btnId too
                     EditText btnName = view.findViewById(R.id.name);
                     btnName.setHint(realName);
@@ -87,7 +95,7 @@ public class ButtonActivity extends AppCompatActivity {
                     });
 
                     battery = Double.parseDouble(btn.child("Battery").getValue().toString());
-                    batteryPerc = String.valueOf(Math.floor((battery -3.2) * 100)) + "%"; // This is calculated by considering the max and min voltages of the battery as 4.2V and 3.2V
+                    batteryPerc = battery< 3.2? 0 + "%" : battery >= 4.2 ? 100+ "%" :Math.floor((battery -3.2) * 100) + "%"; // This is calculated by considering the max and min voltages of the battery as 4.2V and 3.2V
                     TextView strBattery = view.findViewById(R.id.batteryPercentage);
                     strBattery.setText(batteryPerc);
 
