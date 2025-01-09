@@ -6,34 +6,34 @@ Guardian call app is the mobile user interface for the GuardianCall electronic p
 ## Design Overview
 
 
-<div style="display: flex; justify-content: space-around;">
-  <img src="images/Screenshot_20240815-003647.jpg" alt="Image 1" width="200" style="margin: 20px 0;">
-  <img src="images/Screenshot_20240815-003845.jpg" alt="Image 2" width="200" style="margin: 20px 0;">
+<div style="display: flex; justify-content: space-around; text-align: center;">
+  <img src="images/Screenshot_20240815-003647.jpg" alt="Image 1" width="200" style="margin: 20px ;">
+  <img src="images/Screenshot_20240815-003845.jpg" alt="Image 2" width="200" style="margin: 20px ;">
 </div>
 
-<div style="display: flex; justify-content: space-around;">
-    <img src="images/Screenshot_20240815-004432.jpg" alt="Image 3" width="200" style="margin: 20px 0;">
-    <img src="images/Screenshot_20240815-004203.jpg" alt="Image 3" width="200" style="margin: 20px 0;">
+<div style="display: flex; justify-content: space-around; text-align: center;">
+    <img src="images/Screenshot_20240815-004432.jpg" alt="Image 3" width="200" style="margin: 20px ;">
+    <img src="images/Screenshot_20240815-004203.jpg" alt="Image 3" width="200" style="margin: 20px ;">
 </div>
 
-<div style="display: flex; justify-content: space-around;">
-    <img src="images/Screenshot_20240815-004723.jpg" alt="Image 3" width="200" style="margin: 20px 0;">
-    <img src="images/Screenshot_20240815-005022.jpg" alt="Image 3" width="200" style="margin: 20px 0;">
+<div style="display: flex; justify-content: space-around; text-align: center;">
+    <img src="images/Screenshot_20240815-004723.jpg" alt="Image 3" width="200" style="margin: 20px ;">
+    <img src="images/Screenshot_20240815-005022.jpg" alt="Image 3" width="200" style="margin: 20px ;">
 </div>
 
-<div style="display: flex; justify-content: space-around;">
-    <img src="images/Screenshot_20240815-010748.jpg" alt="Image 3" width="200" style="margin: 20px 0;">
-    <img src="images/Screenshot_20240815-010801.jpg" alt="Image 3" width="200" style="margin: 20px 0;">
+<div style="display: flex; justify-content: space-around; text-align: center;">
+    <img src="images/Screenshot_20240815-010748.jpg" alt="Image 3" width="200" style="margin: 20px ;">
+    <img src="images/Screenshot_20240815-010801.jpg" alt="Image 3" width="200" style="margin: 20px ;">
 </div>
 
-<div style="display: flex; justify-content: space-around;">
-    <img src="images/Screenshot_20240815-074249.jpg" alt="Image 3" width="200" style="margin: 20px 0;">
-    <img src="images//Screenshot_20240815-074302.jpg" alt="Image 3" width="200" style="margin: 20px 0;">
+<div style="display: flex; justify-content: space-around; text-align: center;">
+    <img src="images/Screenshot_20240815-074249.jpg" alt="Image 3" width="200" style="margin: 20px;">
+    <img src="images//Screenshot_20240815-074302.jpg" alt="Image 3" width="200" style="margin: 20px ;">
 </div>
 
-<div style="display: flex; justify-content: space-around;">
-    <img src="images/Screenshot_20240815-074317.jpg" alt="Image 3" width="200" style="margin: 20px 0;">
-    <img src="images/Screenshot_20240815-095318.jpg" alt="Image 3" width="200" style="margin: 20px 0;">
+<div style="display: flex; justify-content: space-around; text-align: center;">
+    <img src="images/Screenshot_20240815-074317.jpg" alt="Image 3" width="200" style="margin: 20px;">
+    <img src="images/Screenshot_20240815-095318.jpg" alt="Image 3" width="200" style="margin: 20px;">
 </div>
 
 ![Design Preview](images/GuardianCall_Manual-2.png)
